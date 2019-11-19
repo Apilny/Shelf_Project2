@@ -1,22 +1,48 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Profile</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 </head>
-<body>
-<h1>Profile</h1>
-<p>{{request.session.id}}</p>
-<p>{{user.email}}</p>
-<p>{{user.first_name}}</p>
-<p>{{user.last_name}}</p>
 
-<h2><a href='/shelf/item'>Search by Item</a></h2>
-<h2><a href='/shelf/locations'>Search by Location</a></h2>
-<a href='/logout'>logout</a>
+<header class="jumbotron jumbotron-fluid" style="padding-top:0px;">
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark mb-4">
+        <a class="navbar-brand" href="#">Shelf</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse"
+            aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Link</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <div class="container">
+        <h1 class="display-4">Hi {{user.first_name}}</h1>
+        <p class="lead">Account information</p>
+    </div>
+</header>
+
+<body>
+    <p>{{user.id}}</p>
+    <p>{{user.email}}</p>
+    <p>{{user.first_name}}</p>
+    <p>{{user.last_name}}</p>
+
+    <h2><a href='/shelf/item'>Search by Item</a></h2>
+    <h2><a href='/shelf/locations'>Search by Location</a></h2>
+    <a href='/logout'>logout</a>
 </body>
+
 </html>
