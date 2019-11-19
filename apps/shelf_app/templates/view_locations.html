@@ -11,12 +11,18 @@
 <body>
 
 {%if messages%}
-            <ul>
-                {%for message in messages%}
-                <li style='color:red'>{{message}}</li>
-                {%endfor%}
-            </ul>
-            {%endif%}
+    <ul>
+        {%for message in messages%}
+        <li style='color:red'>{{message}}</li>
+        {%endfor%}
+    </ul>
+    {%endif%}
+
+<form action="locations/search" method="GET">
+    <p>Search: <input type="text" name="search_field" placeholder="Search by store name"></p>
+    <input type="submit" value="Submit">
+</form>
+    
 {%for store in stores%}
 <p>{{store.name}}</p>
     {%for location in store.locations.all%}
