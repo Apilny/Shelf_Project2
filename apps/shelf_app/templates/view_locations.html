@@ -1,0 +1,35 @@
+{%if messages%}
+            <ul>
+                {%for message in messages%}
+                <li style='color:red'>{{message}}</li>
+                {%endfor%}
+            </ul>
+            {%endif%}
+{%for store in stores%}
+<p>{{store.name}}</p>
+    {%for location in store.locations.all%}
+        <a>{{location.address}}  {{location.city}}  {{location.state}}  {{location.zip_code}}</a>
+        <a href='/shelf/{{location.id}}/items'>Items</a>
+        <br>
+    {%endfor%}
+{%endfor%}
+<h3>Add Store</h3>
+<form method='POST' action='/shelf/create/store'>
+    {% csrf_token %}
+    <select name='store_name'>
+        <optgroup label='Current Store:' name='store_name'>
+                {%for store in stores%}
+                <option value='{{store.name}}' name='store_name'> {{store.name}} </option>
+                {%endfor%}
+        </optgroup>
+        <option>
+                New Store Name:<input type='text' name='store_name' placeholder="Select New Store Name">
+        </option>
+    </select>
+    Address:<input type='text' name='address' placeholder='0000 address at street'>
+    City:<input type='text' name='city' placeholder='City'>
+    State:<input type='text' name='state' placeholder='State'>
+    Zip Code:<input type='text' name='zip_code' placeholder='5 digit Zip Code'>
+    <button type='submit'>submit</button>
+</form>
+<a href='/shelf/profile'>dashboard</a>

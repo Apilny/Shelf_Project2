@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title></title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+</head>
+
+<body>
+    <div id="logreg-forms">
+        <form class="form-signin" action='/shelf/login' method="POST">
+            {% csrf_token %}
+            {%if messages%}
+            <ul>
+                {%for message in messages%}
+                <li style='color:red'>{{message}}</li>
+                {%endfor%}
+            </ul>
+            {%endif%}
+            <h1 class="h3 mb-3 font-weight-normal" style="text-align: center"> Sign in</h1>
+            <input type="email" name="email" class="form-control" placeholder="Email address" required=""
+                autofocus="">
+            <input type="password" name="password" class="form-control" placeholder="Password" required="">
+
+            <button class="btn btn-success btn-block" type="submit"><i class="fas fa-sign-in-alt"></i> Sign in</button>
+            <hr>
+        </form>
+
+        <form action="/shelf/register" class="form-signup" method='POST'>
+            {% csrf_token %}
+            <p style="text-align:center">OR</p>
+            <input type="email" name="email" class="form-control" placeholder="Email address" required autofocus="">
+            <input type="text" name="first_name" class="form-control" placeholder="First Name" required autofocus="">
+            <input type="text" name="last_name" class="form-control" placeholder="Last Name" required autofocus="">
+            <input type="password" name="password" class="form-control" placeholder="Password" required autofocus="">
+            <input type="password" name="comfirm_password" class="form-control" placeholder="Repeat Password" required
+                autofocus="">
+
+            <button class="btn btn-primary btn-block" type="submit"><i class="fas fa-user-plus"></i> Sign Up</button>
+        </form>
+        <br>
+
+    </div>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+
+</body>
+
+</html>

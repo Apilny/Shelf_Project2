@@ -1,0 +1,8 @@
+<h1>{{aisle.description}}</h1>
+<h2>{{aisle.location.store.name}}</h2>
+
+{%for item in aisle.items.all%}
+    {{item.name}}<br>
+    {{item.price}}<br>
+{%endfor%}
+<a href='/shelf/profile'>dashboard</a>

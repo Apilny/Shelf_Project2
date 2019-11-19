@@ -1,0 +1,7 @@
+{%for item in items%}
+<a>{{item.name}}</a><br>
+<p>{{item.price}}</p>
+<a>{{item.location.store.name}} {{item.location.city}} {{item.location.state}}</a><br>
+<br>
+{%endfor%}
+<a href='/shelf/profile'>dashboard</a>

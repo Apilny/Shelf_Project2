@@ -1,0 +1,16 @@
+<h1>{{location.store.name}}</h1>
+{%for item in items%}
+{{item.name}}<br>
+{{item.price}}<br>
+<a href='/shelf/{{item.aisle.id}}/aisle'>{{item.aisle.description}}</a><br>
+<br>
+{%endfor%}
+<a href='/shelf/profile'>dashboard</a>
+<h3>Add Item</h3>
+<form method='POST' action='/shelf/{{location.id}}/create_item'>
+    {% csrf_token %}
+    Item:<input type='text' name='name' placeholder='Item Name'>
+    Price:<input type='text' name='price' placeholder='XXX.OO'>
+    Aisle Description:<input type='text' name='description' placeholder="Aisle number Aisle name">
+    <button type='submit'>submit</button>
+</form>

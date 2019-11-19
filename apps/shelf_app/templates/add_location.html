@@ -1,0 +1,13 @@
+<h1>{{store.name}}</h1>
+{%for location in store.locations.all%}
+<p>{{location.address}} {{location.city}}, {{location.state}}  {{location.zip_code}}</p>
+{%endfor%}
+
+<form action='shelf/{{store.id}}/create_location' method='POST'>
+    {% csrf_token %}
+    Address:<input type='text' name='address' placeholder='0000 address at street'>
+    City:<input type='text' name='city' placeholder='City'>
+    State:<input type='text' name='state' placeholder='State'>
+    Zip Code:<input type='text' name='zip_code' placeholder='5 digit Zip Code'>
+    <button type='submit'>submit</button>
+</form>
