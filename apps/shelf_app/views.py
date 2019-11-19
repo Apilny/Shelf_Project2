@@ -63,8 +63,10 @@ def logout(request):
 
 
 def items(request):
+    user = User.objects.get(id=request.session['id'])
     context = {
-        'items': Item.objects.all()
+        'items': Item.objects.all(),
+        'user': user
     }
     return render(request, 'view_items.html', context)
 
