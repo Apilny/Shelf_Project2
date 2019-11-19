@@ -9,6 +9,10 @@
     integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 </head>
 <body>
+<form action="/shelf/item/search" method="GET">
+    <p>Search: <input type="text" name="search_field" placeholder="Search for items"></p>
+    <input type="submit" value="Submit">
+</form>
 {%for item in items%}
 <a>{{item.name}}</a><br>
 <p>{{item.price}}</p>
