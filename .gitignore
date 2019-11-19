@@ -7,8 +7,8 @@
 *.pyc
 __pycache__/
 local_settings.py
-db.sqlite3
-db.sqlite3-journal
+# db.sqlite3
+# db.sqlite3-journal
 media
 apps/shelf_app/__pycache__/
 apps/shelf_app/__pycache__/
