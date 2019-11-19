@@ -81,6 +81,12 @@ def locations(request):
     }
     return render(request, 'view_locations.html', context)
 
+def location_search(request):
+    if request.method == 'GET':
+        context={
+            'stores': Store.objects.filter(name__icontains=request.GET['search_field'])
+        }
+    return render(request, 'view_locations.html', context)
 
 def location_items(request, location_id):
     location = Location.objects.get(id=location_id)
