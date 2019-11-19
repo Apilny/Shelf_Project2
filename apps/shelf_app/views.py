@@ -68,6 +68,12 @@ def items(request):
     }
     return render(request, 'view_items.html', context)
 
+def items_search(request):
+    if request.method == 'GET':
+        context={
+            'items': Item.objects.filter(name__icontains=request.GET['search_field'])
+        }
+    return render (request, 'view_items.html',context)
 
 def locations(request):
     context = {
@@ -84,6 +90,14 @@ def location_items(request, location_id):
     }
     return render(request, 'view_location_items.html', context)
 
+def location_items_search(request, location_id):
+    if request.method == 'GET':
+        location=Location.objects.get(id=location_id)
+        context={
+            'items': location.items.filter(name__icontains=request.GET['search_field']),
+            'location': location
+        }
+    return render(request, 'view_location_items.html',context)
 
 def create_item_to_location(request, location_id):
     if request.method == "POST":
