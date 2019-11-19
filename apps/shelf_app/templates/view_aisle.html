@@ -9,10 +9,14 @@
     integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 </head>
 <body>
-<h1>{{aisle.description}}</h1>
-<h2>{{aisle.location.store.name}}</h2>
+<h1>{{aisle.location.store.name}}</h1>
+<h2>{{aisle.description}}</h2>
 
-{%for item in aisle.items.all%}
+<form action="shelf/{{aisle.id}}/aisle/search" method="GET">
+    <p>Search: <input type="text" name="search_field" placeholder="Search for items"></p>
+    <input type="submit" value="Submit">
+</form>
+{%for item in items%}
     {{item.name}}<br>
     {{item.price}}<br>
 {%endfor%}
