@@ -13,5 +13,6 @@ urlpatterns=[
     url(r'shelf/(?P<location_id>\d+)/(?P<food_id>)/update$', views.update_item_at_location),
     url(r'shelf/(?P<aisle_id>\d+)/aisle$',views.view_aisle_items),
     url(r'shelf/create/store$',views.create_store),
+    url(r'shelf/maps', views.show_map),
     url(r'^logout$', views.logout)
 ]

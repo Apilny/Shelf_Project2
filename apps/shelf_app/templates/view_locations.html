@@ -8,7 +8,7 @@
 {%for store in stores%}
 <p>{{store.name}}</p>
     {%for location in store.locations.all%}
-        <a>{{location.address}}  {{location.city}}  {{location.state}}  {{location.zip_code}}</a>
+        <a href='/shelf/maps'>{{location.address}}  {{location.city}}  {{location.state}}  {{location.zip_code}}</a>
         <a href='/shelf/{{location.id}}/items'>Items</a>
         <br>
     {%endfor%}
