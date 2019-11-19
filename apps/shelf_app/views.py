@@ -78,13 +78,17 @@ def items_search(request):
     return render (request, 'view_items.html',context)
 
 def locations(request):
-    user = User.objects.get(id=request.session['id'])
     context = {
-        'user':user,
-        'stores': Store.objects.all()
+        'stores': Store.objects.all().order_by('name')
     }
     return render(request, 'view_locations.html', context)
 
+def location_search(request):
+    if request.method == 'GET':
+        context={
+            'stores': Store.objects.filter(name__icontains=request.GET['search_field'])
+        }
+    return render(request, 'view_locations.html', context)
 
 def location_items(request, location_id):
     location = Location.objects.get(id=location_id)
@@ -159,11 +163,21 @@ def update_item_at_location(request, item_id, location_id):
 
 
 def view_aisle_items(request, aisle_id):
-    context = {
-        'aisle': Aisle.objects.get(id=aisle_id)
+    aisle=Aisle.objects.get(id=aisle_id)
+    context={
+        'items': aisle.items.all(),
+        'aisle': aisle
     }
     return render(request, 'view_aisle.html', context)
 
+def aisle_search(request, aisle_id):
+    if request.method == 'GET':
+        aisle=Aisle.objects.get(id=aisle_id)
+        context={
+            'items': aisle.items.filter(name__icontains=request.GET['search_field']),
+            'aisle': aisle
+        }
+    return render(request, 'view_aisle.html', context)
 
 def create_store(request):
     if request.method == "POST":
