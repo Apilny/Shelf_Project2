@@ -58,7 +58,7 @@
             {%for location in store.locations.all%}
             <tr>
                 <td scope="row">{{location.store.name}}</th>
-                <td><a href='/shelf/maps'>{{location.address}} {{location.city}} {{location.state}}
+                <td><a href='http://maps.google.com/maps/dir/{{location.address}}+{{location.city}},+{{location.state}},+{{location.zip_code}}'>{{location.address}} {{location.city}} {{location.state}}
                         {{location.zip_code}}</a></td>
                 <td><a href='/shelf/{{location.id}}/items'>Items</a></td>
             </tr>
