@@ -1,3 +1,14 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Profile</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+</head>
+<body>
 <h1>Profile</h1>
 <p>{{request.session.id}}</p>
 <p>{{user.email}}</p>
@@ -7,3 +18,5 @@
 <h2><a href='/shelf/item'>Search by Item</a></h2>
 <h2><a href='/shelf/locations'>Search by Location</a></h2>
 <a href='/logout'>logout</a>
+</body>
+</html>
