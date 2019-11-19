@@ -8,6 +8,7 @@ urlpatterns=[
     url(r'^shelf/item$', views.items),
     url(r'^shelf/item/search$', views.items_search),
     url(r'^shelf/locations$', views.locations),
+    url(r'^shelf/locations/search$', views.location_search),
     url(r'shelf/(?P<location_id>\d+)/items$', views.location_items),
     url(r'shelf/(?P<location_id>\d+)/items/search$', views.location_items_search),
     url(r'shelf/(?P<location_id>\d+)/create_item$', views.create_item_to_location),
