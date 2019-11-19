@@ -77,7 +77,7 @@ def items_search(request):
 
 def locations(request):
     context = {
-        'stores': Store.objects.all()
+        'stores': Store.objects.all().order_by('name')
     }
     return render(request, 'view_locations.html', context)
 
