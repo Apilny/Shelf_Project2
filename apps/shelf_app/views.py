@@ -78,7 +78,9 @@ def items_search(request):
     return render (request, 'view_items.html',context)
 
 def locations(request):
+    user = User.objects.get(id=request.session['id'])
     context = {
+        'user':user,
         'stores': Store.objects.all()
     }
     return render(request, 'view_locations.html', context)
