@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <form action="/shelf/register" class="form-signup" method='POST'>
+        {% csrf_token %}
+        <p style="text-align:center">OR</p>
+        <input type="email" name="email" class="form-control" placeholder="Email address" required autofocus="">
+        <input type="text" name="first_name" class="form-control" placeholder="First Name" required autofocus="">
+        <input type="text" name="last_name" class="form-control" placeholder="Last Name" required autofocus="">
+        <input type="password" name="password" class="form-control" placeholder="Password" required autofocus="">
+        <input type="password" name="comfirm_password" class="form-control" placeholder="Repeat Password" required
+            autofocus="">
+        <button class="btn btn-primary btn-block" type="submit"><i class="fas fa-user-plus"></i> Sign Up</button>
+    </form>
+</body>
+</html>
