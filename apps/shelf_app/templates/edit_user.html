@@ -5,12 +5,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Profile</title>
-    {% load static %}
+    <title>Change Profile Information</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
         integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 </head>
-
 <header class="jumbotron jumbotron-fluid" style="padding-top:0px; padding-bottom: 2px;">
     <nav class="navbar navbar-expand-md navbar-dark bg-dark mb-4">
         <a class="navbar-brand" href="#">Shelf</a>
@@ -27,22 +25,36 @@
                     <a class="nav-link" href='/shelf/locations'>Search by Location</a>
                 </li>
                 <li class="nav-item active">
-                    <a  class="nav-link" href='/logout'>logout</a>
+                    <a class="nav-link" href='/logout'>logout</a>
                 </li>
             </ul>
         </div>
     </nav>
     <div class="container">
-        <h1 class="display-4">Hi {{request.session.first_name}},</h1>
-        <p class="lead">Account information</p>
+        <h1 class="display-4">Hi {{user.first_name}},</h1>
+        <p class="lead">Update your account information below</p>
     </div>
 </header>
 
 <body>
-    <p>Account Number: {{user.id}}</p>
-    <p>Account Email: {{user.email}}</p>
-    <p>Account Name: {{user.first_name}} {{user.last_name}}</p>
-    <a href='/shelf/profile/edit'>Edit Account Information</a>
+    {%if messages%}
+    <ul>
+        {%for message in messages%}
+        <li style='color:red'>{{message}}</li>
+        {%endfor%}
+    </ul>
+    {%endif%}
+    <form action="/shelf/edit" class="form-signup" method='POST'>
+        {% csrf_token %}
+        <input type="email" name="email" class="form-control" placeholder="{{user.email}}" required autofocus="">
+        <input type="text" name="first_name" class="form-control" placeholder="{{user.first_name}}" required
+            autofocus="">
+        <input type="text" name="last_name" class="form-control" placeholder="{{user.last_name}}" required autofocus="">
+        <input type="password" name="password" class="form-control" placeholder="Password" required autofocus="">
+        <input type="password" name="comfirm_password" class="form-control" placeholder="Repeat Password" required
+            autofocus="">
+        <button class="btn btn-primary btn-block" type="submit">Update</button>
+    </form>
 </body>
 
 </html>
