@@ -41,8 +41,9 @@ def register(request):
                 last_name=request.POST['last_name'],
                 password=pw_hash
             )
-            request.session['user_id'] = User.objects.last().id
-
+            request.session['id'] = User.objects.last().id
+            request.session['first_name'] = User.objects.last().first_name
+            return redirect('/shelf/profile')
     return redirect('/shelf')
 
 
