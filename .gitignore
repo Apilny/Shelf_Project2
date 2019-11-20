@@ -179,10 +179,3 @@ dmypy.json
 .history
 
 # End of https://www.gitignore.io/api/python,django,visualstudiocode
-Python_Project_Shelf/__pycache__/__init__.cpython-36.pyc
-Python_Project_Shelf/__pycache__/settings.cpython-36.pyc
-Python_Project_Shelf/__pycache__/urls.cpython-36.pyc
-Python_Project_Shelf/__pycache__/wsgi.cpython-36.pyc
-apps/shelf_app/migrations/__pycache__/__init__.cpython-36.pyc
-apps/shelf_app/migrations/__pycache__/0002_auto_20191118_1622.cpython-36.pyc
-apps/shelf_app/migrations/__pycache__/0001_initial.cpython-36.pyc
