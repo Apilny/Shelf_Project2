@@ -31,7 +31,7 @@
         </div>
     </nav>
     <div class="container">
-        <h1 class="display-4">Hi {{user.first_name}},</h1>
+        <h1 class="display-4">Hi {{request.session.first_name}},</h1>
         <p class="lead">Search by item</p>
     </div>
 </header>
@@ -39,12 +39,7 @@
 <form action="shelf/{{location.store.id}}/items/search" method="GET">
     <p><input type="text" name="search_field" placeholder="Search for items"> <input type="submit" value="Submit"></p>
 </form>
-{%for item in items%}
-{{item.name}}<br>
-{{item.price}}<br>
-<a href='/shelf/{{item.aisle.id}}/aisle'>{{item.aisle.description}}</a><br>
-<br>
-{%endfor%}
+
 <table class="table table-striped table-dark">
     <thead>
         <tr>
