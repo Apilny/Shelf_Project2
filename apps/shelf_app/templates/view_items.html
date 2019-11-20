@@ -33,7 +33,7 @@
         </div>
     </nav>
     <div class="container">
-        <h1 class="display-4">Hi {{user.first_name}},</h1>
+        <h1 class="display-4">Hi {{request.session.first_name}},</h1>
         <p class="lead">Search by item</p>
     </div>
 </header>
@@ -55,8 +55,8 @@
             <tr>
                 <td scope="row">{{item.name}}</th>
                 <td>${{item.price}}</td>
-                <td>{{item.location.store.name}}-{{item.location.city}},{{item.location.state}}</td>
-                <td>{{item.aisle.description}}</td>
+                <td><a href="shelf/{{item.location.id}}/items">{{item.location.store.name}} - {{item.location.city}},{{item.location.state}}</a></td>
+                <td><a href="shelf/{{item.aisle.id}}/aisle">{{item.aisle.description}}</a></td>
             </tr>
         </tbody>
         {%endfor%}
