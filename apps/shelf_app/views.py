@@ -17,6 +17,7 @@ def login(request):
             return redirect('/shelf')
         if bcrypt.checkpw(request.POST['password'].encode(), user.password.encode()):
             request.session['id'] = user.id
+            request.session['first_name'] = user.first_name
             return redirect('/shelf/profile')
         else:
             messages.error(request, 'E-Mail or Password is incorrect')
