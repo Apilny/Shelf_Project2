@@ -56,7 +56,7 @@
                 <td scope="row">{{item.name}}</th>
                 <td>${{item.price}}</td>
                 <td>{{item.location.store.name}}-{{item.location.city}},{{item.location.state}}</td>
-                <td>{{item.aisle.description}}</td>
+                <td><a href='/shelf/{{item.aisle.id}}/aisle'>{{item.aisle.description}}</a></td>
             </tr>
         </tbody>
         {%endfor%}
