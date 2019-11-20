@@ -22,7 +22,6 @@ def login(request):
         else:
             messages.error(request, 'E-Mail or Password is incorrect')
             return redirect('/shelf')
-
     return redirect('/shelf')
 
 
@@ -42,9 +41,7 @@ def register(request):
                 last_name=request.POST['last_name'],
                 password=pw_hash
             )
-            request.session['id'] = User.objects.last().id
-            request.session['first_name'] = User.objects.last().first_name
-            return redirect('/shelf/profile')
+            request.session['user_id'] = User.objects.last().id
     return redirect('/shelf')
 
 
@@ -57,6 +54,31 @@ def profile(request):
         'user': user
     }
     return render(request, 'profile.html', context)
+
+
+def edit_form(request):
+    context = {
+        'user': User.objects.get(id=request.session['id'])
+    }
+    return render(request, "edit_user.html", context)
+
+
+def edit_profile(request):
+    if request.method == 'POST':
+        errors = User.objects.basic_validator(request.POST)
+        if len(errors) > 0:
+            for key, value in errors.items():
+                messages.error(request, value)
+                return redirect('/shelf/profile/edit')
+        else:
+            change = User.objects.get(id=request.session['id'])
+            change.email = request.POST['email']
+            change.first_name = request.POST['first_name']
+            change.last_name = request.POST['last_name']
+            change.password = request.POST['password']
+            change.save()
+            return redirect('/shelf/profile')
+    return redirect('/shelf')
 
 
 def logout(request):
@@ -72,26 +94,29 @@ def items(request):
     }
     return render(request, 'view_items.html', context)
 
+
 def items_search(request):
     if request.method == 'GET':
-        context={
+        context ={
             'items': Item.objects.filter(name__icontains=request.GET['search_field'])
         }
-    return render (request, 'view_items.html',context)
+    return render (request, 'view_items.html', context)
+
 
 def locations(request):
     context = {
-        'user': User.objects.get(id=request.session['id']),
         'stores': Store.objects.all().order_by('name')
     }
     return render(request, 'view_locations.html', context)
 
+
 def location_search(request):
     if request.method == 'GET':
-        context={
+        context ={
             'stores': Store.objects.filter(name__icontains=request.GET['search_field'])
         }
     return render(request, 'view_locations.html', context)
+
 
 def location_items(request, location_id):
     location = Location.objects.get(id=location_id)
@@ -101,14 +126,16 @@ def location_items(request, location_id):
     }
     return render(request, 'view_location_items.html', context)
 
+
 def location_items_search(request, location_id):
     if request.method == 'GET':
-        location=Location.objects.get(id=location_id)
-        context={
+        location = Location.objects.get(id=location_id)
+        context ={
             'items': location.items.filter(name__icontains=request.GET['search_field']),
             'location': location
         }
-    return render(request, 'view_location_items.html',context)
+    return render(request, 'view_location_items.html', context)
+
 
 def create_item_to_location(request, location_id):
     if request.method == "POST":
@@ -166,21 +193,23 @@ def update_item_at_location(request, item_id, location_id):
 
 
 def view_aisle_items(request, aisle_id):
-    aisle=Aisle.objects.get(id=aisle_id)
-    context={
+    aisle = Aisle.objects.get(id=aisle_id)
+    context ={
         'items': aisle.items.all(),
         'aisle': aisle
     }
     return render(request, 'view_aisle.html', context)
 
+
 def aisle_search(request, aisle_id):
     if request.method == 'GET':
-        aisle=Aisle.objects.get(id=aisle_id)
-        context={
+        aisle = Aisle.objects.get(id=aisle_id)
+        context ={
             'items': aisle.items.filter(name__icontains=request.GET['search_field']),
             'aisle': aisle
         }
     return render(request, 'view_aisle.html', context)
+
 
 def create_store(request):
     if request.method == "POST":
@@ -206,7 +235,8 @@ def create_store(request):
                 )
     return redirect('/shelf/locations')
 
+
 def show_map(request):
     mapbox_access_token = 'pk.eyJ1IjoiY29keW1hbGRvbmFkbzI4IiwiYSI6ImNrMzYzdjRyeDA3ZXUzYmt4MXE3ajI4encifQ.OpwaNlWkZIOU5W1rzfUI4w'
     return render(request, 'maps.html',
-        {'mapbox_access_token':'pk.eyJ1IjoiY29keW1hbGRvbmFkbzI4IiwiYSI6ImNrMzYzdjRyeDA3ZXUzYmt4MXE3ajI4encifQ.OpwaNlWkZIOU5W1rzfUI4w' })
+        {'mapbox_access_token': 'pk.eyJ1IjoiY29keW1hbGRvbmFkbzI4IiwiYSI6ImNrMzYzdjRyeDA3ZXUzYmt4MXE3ajI4encifQ.OpwaNlWkZIOU5W1rzfUI4w' })
