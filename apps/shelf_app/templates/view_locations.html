@@ -63,7 +63,7 @@
             {%for location in store.locations.all%}
             <tr>
                 <td scope="row">{{location.store.name}}</th>
-                <td><a href='http://maps.google.com/maps/dir/{{location.address}}+{{location.city}},+{{location.state}},+{{location.zip_code}}'>{{location.address}} {{location.city}} {{location.state}}
+                <td><a class='navigate' href='http://maps.google.com/maps/dir/{{location.address}}+{{location.city}},+{{location.state}},+{{location.zip_code}}'>{{location.address}} {{location.city}} {{location.state}}
                         {{location.zip_code}}</a></td>
                 <td><a href='/shelf/{{location.id}}/items'>Items</a></td>
             </tr>
@@ -86,6 +86,7 @@
             <p><button type='submit'>submit</button></p>
         </div>
     </form>
+    <button id='location_button'> current location</button>
     <a href='/shelf/profile'>dashboard</a>
     <script>
         $(document).ready(function () {
@@ -97,7 +98,20 @@
                 $('#store_select').empty()
                 $('#store_select').append(" New Store Name:<input type='text' name='store_name' placeholder='Select New Store Name'>")
             })
+            $('#location_button').click(function(){
+                alert('location_button clicked')
+                if (navigator.geolocation)
+                    navigator.geolocation.getCurrentPosition(function(position){
+                        console.log(position);
+                        get("https://www.google.com/maps/search/'+position.coords.latitude+','+position.coords.longitude+'".function(data));
+                        console.log(data)
+                })
+                else
+                    console.log('no geolocation')
+            })
+
         })
+
 
     </script>
 
