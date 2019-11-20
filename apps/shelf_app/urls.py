@@ -5,6 +5,8 @@ urlpatterns=[
     url(r'^shelf/login$', views.login),
     url(r'^shelf/register$', views.register),
     url(r'^shelf/profile$', views.profile),
+    url(r'^shelf/profile/edit', views.edit_form),
+    url(r'^shelf/edit', views.edit_profile),    
     url(r'^shelf/item$', views.items),
     url(r'^shelf/item/search$', views.items_search),
     url(r'^shelf/locations$', views.locations),

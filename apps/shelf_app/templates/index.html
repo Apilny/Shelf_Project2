@@ -33,13 +33,12 @@
         <form action="/shelf/register" class="form-signup" method='POST'>
             {% csrf_token %}
             <p style="text-align:center">OR</p>
-            <input type="email" name="email" class="form-control" placeholder="Email address" required autofocus="">
+            <!-- <input type="email" name="email" class="form-control" placeholder="Email address" required autofocus=""> -->
             <input type="text" name="first_name" class="form-control" placeholder="First Name" required autofocus="">
             <input type="text" name="last_name" class="form-control" placeholder="Last Name" required autofocus="">
             <input type="password" name="password" class="form-control" placeholder="Password" required autofocus="">
             <input type="password" name="comfirm_password" class="form-control" placeholder="Repeat Password" required
                 autofocus="">
-
             <button class="btn btn-primary btn-block" type="submit"><i class="fas fa-user-plus"></i> Sign Up</button>
         </form>
         <br>
