@@ -64,8 +64,8 @@
             {%for location in store.locations.all%}
             <tr>
                 <td scope="row">{{location.store.name}}</th>
-                <td><a class='navigation' >{{location.address}} {{location.city}} {{location.state}}
-                        {{location.zip_code}}</a></td>
+                <td><a class='navigation'>{{location.address}} {{location.city}} {{location.state}}
+                    {{location.zip_code}}</a></td>
                 <td><a href='/shelf/{{location.id}}/items'>Items</a></td>
                 <td><a href='/shelf/{{location.id}}/add_favorite_location'>Favorite this Location</a></td>
             </tr>
@@ -105,13 +105,13 @@
                         console.log(position);
                         var current_long = position.coords.longitude;
                         var current_lat = position.coords.latitude;
-                        // var destination = 'http://maps.google.com/maps/dir/?api=1&origin' + current_lat + '+' + current_long);
                         console.log(current_lat, current_long);
-                        $('.navigation').attr('href', 'http://maps.google.com/maps/dir/' + current_lat + '+' + current_long)
-                        // $('.navigate_to').click();
+                        $('.navigation a').empty()
+                        $('.navigation').append("<a class='navigate' href='https://www.google.com/maps/dir/?api=1&orign"+current_lat+","+current_long+"&destination={{location.address}}+{{location.city}}+{{location.state}}+{{location.zip_code}}'>Navigate</a>")
                     })
                 else
                     console.log('no geolocation')
+
             })
         })
     </script>
