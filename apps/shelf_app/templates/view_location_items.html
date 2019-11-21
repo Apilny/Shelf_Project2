@@ -36,6 +36,8 @@
     </div>
 </header>
 <h1>{{location.store.name}}</h1>
+<h3>{{location.address}}</h3>
+<h3>{{location.city}}, {{location.state}} {{location.zip_code}}</h3>
 <form action="shelf/{{location.store.id}}/items/search" method="GET">
     <p><input type="text" name="search_field" placeholder="Search for items"> <input type="submit" value="Submit"></p>
 </form>
