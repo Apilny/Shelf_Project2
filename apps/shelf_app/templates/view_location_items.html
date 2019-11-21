@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Location</title>
+    {% load static %}
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
     <script src='http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js'></script>
 </head>
@@ -13,6 +14,7 @@
 <body>
     <header class="jumbotron jumbotron-fluid" style="padding-top:0px; padding-bottom: 2px;">
         <nav class="navbar navbar-expand-md navbar-dark bg-dark mb-4">
+            <img src="{% static 'images/shopping_cart.png' %}" width="40px" height="40px" />
             <a class="navbar-brand" href="#">Shelf</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse"
                 aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
@@ -57,6 +59,7 @@
             <td scope="row">{{item.name}}</th>
             <td>${{item.price}}</td>
             <td><a href='/shelf/{{item.aisle.id}}/aisle'>{{item.aisle.description}}</a></td>
+            <td><a href='/shelf/{{item.id}}/add_favorite_item'>Favorite Item</a></td>
         </tr>
     </tbody>
     {%endfor%}
