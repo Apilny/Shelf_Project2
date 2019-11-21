@@ -46,6 +46,7 @@
             <th scope="col">Item</th>
             <th scope="col">Price</th>
             <th scope="col">Aisle</th>
+            <th scope="col">Edit</th>
         </tr>
     </thead>
     {%for item in items%}
@@ -54,6 +55,7 @@
             <td scope="row">{{item.name}}</th>
             <td>${{item.price}}</td>
             <td><a href='/shelf/{{item.aisle.id}}/aisle'>{{item.aisle.description}}</a></td>
+            <td><a href='/shelf/{{item.id}}/edit'>Edit item</a></td>       
         </tr>
     </tbody>
     {%endfor%}
