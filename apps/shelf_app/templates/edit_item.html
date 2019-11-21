@@ -8,7 +8,8 @@
     <title>Edit Item</title>
     {% load static %}
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src='http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js'></script>
 </head>
 <header class="jumbotron jumbotron-fluid" style="padding-top:0px; padding-bottom: 2px;">
     <nav class="navbar navbar-expand-md navbar-dark bg-dark mb-4">
@@ -39,13 +40,46 @@
 </header>
 
 <body>
-    <form action='/shelf/edit/{{item.id}}' method='POST'>
-        {% csrf_token %}
-        Item:<input type='text' name='name' placeholder='{{item.name}}'>
-        Price:<input type='text' name='price' placeholder='XXX.OO'>
-        Aisle Description:<input type='text' name='description' placeholder="Aisle number Aisle name">
-        <button type='submit'>submit</button>
-    </form>
+    <div style='margin-left:25%; text-align: center; width:600px;'>
+        <form method='POST' action='/shelf/edit/{{item.id}}'>
+            <h3>Edit Item</h3>
+            {%if messages%}
+            <ul>
+                {%for message in messages%}
+                <li style='color:red'>{{message}}</li>
+                {%endfor%}
+            </ul>
+            {%endif%}
+            {% csrf_token %}
+            Item:<input class="form-control" id="exampleFormControlInput1" type='text' name='name'
+                placeholder='{{item.name}}'>
+            Price:<input class="form-control" id="exampleFormControlInput1" type='text' name='price'
+                placeholder='XXX.OO'>
+            <div id='old_aisle' style="color: blue; text-decoration: underline;">Pick From Current Aisles</div>
+            <p>or</p>
+            <div id='new_aisle' style="color: blue; text-decoration: underline;">Create New Aisle</div><br>
+            <div id='aisle_select'>
+                <select class="form-control" name='aisle_id'>
+                    <optgroup class="form-control" label='Current Aisles:' name='aisle_id'>
+                        {%for aisle in location.aisles.all%}
+                        <option value='{{aisle.id}}' name='aisle_id'> {{aisle.description}} </option>
+                        {%endfor%}</optgroup>
+                </select></div><br>
+            <button type='submit'>Update</button>
+        </form>
+    </div>
+    <script>
+        $(document).ready(function () {
+            $('#old_aisle').click(function () {
+                $('#aisle_select').empty()
+                $('#aisle_select').append("<select class='form-control'name='aisle_id'><optgroup label='Current Aisles:' name='aisle_id'>{%for aisle in location.aisles.all%}<option value='{{aisle.id}}' name='aisle_id'> {{aisle.description}} </option>{%endfor%}</optgroup></select>")
+            })
+            $('#new_aisle').click(function () {
+                $('#aisle_select').empty()
+                $('#aisle_select').append(" New Aisle information: <input class='form-control' type='text' name='aisle_id' placeholder='New Aisle Description'>")
+            })
+        })
+    </script>
 </body>
 
 </html>

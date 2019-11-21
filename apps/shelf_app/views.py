@@ -100,8 +100,10 @@ def items(request):
 
 
 def item_edit_form(request, item_id):
+    item= Item.objects.get(id=item_id)
     context = {
-        "item": Item.objects.get(id=item_id)
+        "item": Item.objects.get(id=item_id),
+        "location": item.location
     }
     return render(request, 'edit_item.html', context)
 
@@ -111,9 +113,9 @@ def edit_item(request, item_id):
         changes = Item.objects.get(id=item_id)
         changes.name = request.POST['name']
         changes.price = request.POST['price']
-        changes.aisle.description = request.POST['description']
+        changes.aisle.description = request.POST['aisle_id']
         changes.save()
-        return redirect('/shelf/{item_id}/edit')
+        return redirect(f'/shelf/item')
     else:
         return redirect('view_items.html')
 
