@@ -33,7 +33,7 @@
         </div>
     </nav>
     <div class="container">
-        <h1 class="display-4">Hi {{user.first_name}},</h1>
+        <h1 class="display-4">Hi {{request.session.first_name}},</h1>
         <p class="lead">Account information</p>
     </div>
 </header>
@@ -41,8 +41,8 @@
 <body>
     <p>Account Number: {{user.id}}</p>
     <p>Account Email: {{user.email}}</p>
-    <p>Account Name: {{user.first_name}}{{user.last_name}}</p>
-    <a href='#'>Edit Account Information</a>
+    <p>Account Name: {{user.first_name}} {{user.last_name}}</p>
+    <p><a href='/shelf/profile/edit'>Edit Account Information</a></p>
 </body>
 
 </html>
