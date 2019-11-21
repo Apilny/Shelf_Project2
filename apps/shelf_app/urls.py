@@ -21,6 +21,5 @@ urlpatterns=[
     url(r'^shelf/(?P<item_id>\d+)/edit$', views.item_edit_form),
     url(r'^shelf/edit/(?P<item_id>\d+)$', views.edit_item),    
     url(r'shelf/create/store$',views.create_store),
-    url(r'shelf/maps$', views.show_map),
     url(r'^logout$', views.logout)
 ]
