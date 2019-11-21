@@ -135,10 +135,13 @@ def locations(request):
 
 def location_search(request):
     if request.method == 'GET':
-        context = {
-            'stores': Store.objects.filter(name__icontains=request.GET['search_field'])
-        }
-    return render(request, 'view_locations.html', context)
+        if request.GET['search_field'] == "":
+            return redirect('/shelf/locations')
+        else:
+            context = {
+                'stores': Store.objects.filter(name__icontains=request.GET['search_field'])
+            }
+        return render(request, 'view_locations.html', context)
 
 
 def location_items(request, location_id):
@@ -152,12 +155,15 @@ def location_items(request, location_id):
 
 def location_items_search(request, location_id):
     if request.method == 'GET':
-        location = Location.objects.get(id=location_id)
-        context = {
-            'items': location.items.filter(name__icontains=request.GET['search_field']),
-            'location': location
-        }
-    return render(request, 'view_location_items.html', context)
+        if request.GET['search_field'] == "":
+            return redirect(f'/shelf/{location_id}/items')
+        else:
+            location = Location.objects.get(id=location_id)
+            context = {
+                'items': location.items.filter(name__icontains=request.GET['search_field']),
+                'location': location
+            }
+        return render(request, 'view_location_items.html', context)
 
 
 def create_item_to_location(request, location_id):
@@ -229,12 +235,15 @@ def view_aisle_items(request, aisle_id):
 
 def aisle_search(request, aisle_id):
     if request.method == 'GET':
-        aisle = Aisle.objects.get(id=aisle_id)
-        context = {
-            'items': aisle.items.filter(name__icontains=request.GET['search_field']),
-            'aisle': aisle
-        }
-    return render(request, 'view_aisle.html', context)
+        if request.GET['search_field'] == "":
+            return redirect(f'/shelf/{aisle_id}/aisle')
+        else:
+            aisle = Aisle.objects.get(id=aisle_id)
+            context = {
+                'items': aisle.items.filter(name__icontains=request.GET['search_field']),
+                'aisle': aisle
+            }
+        return render(request, 'view_aisle.html', context)
 
 
 def create_store(request):
