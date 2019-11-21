@@ -77,7 +77,7 @@
             <div id='old_store'  style="color: blue; text-decoration: underline;">Pick From Current Stores</div>
             <p>or</p>
             <div id='new_store' style="color: blue; text-decoration: underline;">Pick Create New Store</div><br>
-            <div id='store_select'><select name='store_name'><optgroup label='Current Store:' name='store_name'>{%for store in stores%}<option value='{{store.name}}' name='store_name'> {{store.name}} </option>{%endfor%}</optgroup></select></div><br>
+            <div id='store_select'><select name='store_name'><optgroup label='Current Store:' name='aisle_id'>{%for store in stores%}<option value='{{store.name}}' name='store_name'> {{store.name}} </option>{%endfor%}</optgroup></select></div><br>
             <p>Address:<input type='text' name='address' placeholder='0000 address at street'></p>
             <p> City:<input type='text' name='city' placeholder='City'></p>
             <p> State:<input type='text' name='state' placeholder='State'></p>
