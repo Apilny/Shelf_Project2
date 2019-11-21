@@ -41,9 +41,7 @@ def register(request):
                 last_name=request.POST['last_name'],
                 password=pw_hash
             )
-            request.session['id'] = User.objects.last().id
-            request.session['first_name'] = User.objects.last().first_name
-            return redirect('/shelf/profile')
+            request.session['user_id'] = User.objects.last().id
     return redirect('/shelf')
 
 
@@ -91,34 +89,37 @@ def logout(request):
 def items(request):
     user = User.objects.get(id=request.session['id'])
     context = {
-        'items': Item.objects.all().order_by('name'),
+        'items': Item.objects.all(),
         'user': user
     }
     return render(request, 'view_items.html', context)
 
+
 def item_edit_form(request, item_id):
-    context={
+    context = {
         "item": Item.objects.get(id=item_id)
     }
     return render(request, 'edit_item.html', context)
 
+
 def edit_item(request, item_id):
-    if request.method=='POST':
+    if request.method == 'POST':
         changes = Item.objects.get(id=item_id)
         changes.name = request.POST['name']
         changes.price = request.POST['price']
         changes.aisle.description = request.POST['description']
         changes.save()
         return redirect('/shelf/{item_id}/edit')
-    else: 
+    else:
         return redirect('view_items.html')
+
 
 def items_search(request):
     if request.method == 'GET':
-        context ={
+        context = {
             'items': Item.objects.filter(name__icontains=request.GET['search_field'])
         }
-    return render (request, 'view_items.html', context)
+    return render(request, 'view_items.html', context)
 
 
 def locations(request):
@@ -130,7 +131,7 @@ def locations(request):
 
 def location_search(request):
     if request.method == 'GET':
-        context ={
+        context = {
             'stores': Store.objects.filter(name__icontains=request.GET['search_field'])
         }
     return render(request, 'view_locations.html', context)
@@ -148,7 +149,7 @@ def location_items(request, location_id):
 def location_items_search(request, location_id):
     if request.method == 'GET':
         location = Location.objects.get(id=location_id)
-        context ={
+        context = {
             'items': location.items.filter(name__icontains=request.GET['search_field']),
             'location': location
         }
@@ -157,29 +158,35 @@ def location_items_search(request, location_id):
 
 def create_item_to_location(request, location_id):
     if request.method == "POST":
-        location = Location.objects.get(id=location_id)
-        try:
-            Aisle.objects.get(id=request.POST['aisle_id'])
-            aisle = Aisle.objects.get(id=request.POST['aisle_id'])
-            Item.objects.create(
-                name=request.POST['name'],
-                price=request.POST['price'],
-                aisle=aisle,
-                location=location
-            )
-            return redirect(f'shelf/{location_id}/items')
-        except:
-            aisle = Aisle.objects.create(
-                description=request.POST['description'],
-                location=Location.objects.get(id=location_id)
-            )
-            Item.objects.create(
-                name=request.POST['name'],
-                price=request.POST['price'],
-                aisle=aisle,
-                location=location
-            )
-            return redirect(f'shelf/{location_id}/items')
+        errors = Item.objects.basic_validator(request.POST)
+        if len(errors) > 0:
+            for key, value in errors.items():
+                messages.error(request, value)
+                return redirect(f'/shelf/{location_id}/items')
+            else:
+                location = Location.objects.get(id=location_id)
+                try:
+                    Aisle.objects.get(id=request.POST['aisle_id'])
+                    aisle = Aisle.objects.get(id=request.POST['aisle_id'])
+                    Item.objects.create(
+                        name=request.POST['name'],
+                        price=request.POST['price'],
+                        aisle=aisle,
+                        location=location
+                    )
+                    return redirect(f'shelf/{location_id}/items')
+                except:
+                    aisle = Aisle.objects.create(
+                        description=request.POST['description'],
+                        location=Location.objects.get(id=location_id)
+                    )
+                    Item.objects.create(
+                        name=request.POST['name'],
+                        price=request.POST['price'],
+                        aisle=aisle,
+                        location=location
+                    )
+                    return redirect(f'shelf/{location_id}/items')
 
 
 def edit_item_at_location(request, item_id, location_id):
@@ -212,8 +219,8 @@ def update_item_at_location(request, item_id, location_id):
 
 def view_aisle_items(request, aisle_id):
     aisle = Aisle.objects.get(id=aisle_id)
-    context ={
-        'items': aisle.items.all().order_by('name'),
+    context = {
+        'items': aisle.items.all(),
         'aisle': aisle
     }
     return render(request, 'view_aisle.html', context)
@@ -222,7 +229,7 @@ def view_aisle_items(request, aisle_id):
 def aisle_search(request, aisle_id):
     if request.method == 'GET':
         aisle = Aisle.objects.get(id=aisle_id)
-        context ={
+        context = {
             'items': aisle.items.filter(name__icontains=request.GET['search_field']),
             'aisle': aisle
         }
@@ -257,4 +264,4 @@ def create_store(request):
 def show_map(request):
     mapbox_access_token = 'pk.eyJ1IjoiY29keW1hbGRvbmFkbzI4IiwiYSI6ImNrMzYzdjRyeDA3ZXUzYmt4MXE3ajI4encifQ.OpwaNlWkZIOU5W1rzfUI4w'
     return render(request, 'maps.html',
-        {'mapbox_access_token': 'pk.eyJ1IjoiY29keW1hbGRvbmFkbzI4IiwiYSI6ImNrMzYzdjRyeDA3ZXUzYmt4MXE3ajI4encifQ.OpwaNlWkZIOU5W1rzfUI4w' })
+                  {'mapbox_access_token': 'pk.eyJ1IjoiY29keW1hbGRvbmFkbzI4IiwiYSI6ImNrMzYzdjRyeDA3ZXUzYmt4MXE3ajI4encifQ.OpwaNlWkZIOU5W1rzfUI4w'})
