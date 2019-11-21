@@ -110,14 +110,20 @@ def item_edit_form(request, item_id):
 
 def edit_item(request, item_id):
     if request.method == 'POST':
-        changes = Item.objects.get(id=item_id)
-        changes.name = request.POST['name']
-        changes.price = request.POST['price']
-        changes.aisle.description = request.POST['aisle_id']
-        changes.save()
-        return redirect(f'/shelf/item')
+        errors = Item.objects.basic_validator(request.POST)
+        if len(errors) > 0:
+            for key, value in errors.items():
+                messages.error(request, value)
+                return redirect(f'/shelf/edit/{item_id}')
+        else:
+            changes = Item.objects.get(id=item_id)
+            changes.name = request.POST['name']
+            changes.price = request.POST['price']
+            changes.aisle.description = request.POST['aisle_id']
+            changes.save()
+            return redirect(f'/shelf/item')
     else:
-        return redirect('view_items.html')
+        return redirect('/shelf/item')
 
 
 def items_search(request):
@@ -175,9 +181,7 @@ def create_item_to_location(request, location_id):
             try:
                 aisle=Aisle.objects.get(id=request.POST['aisle_id'])
                 print(request.POST['aisle_id'])
-                print('this did work')
             except:
-                print('did not work')
                 aisle = Aisle.objects.create(
                     description=request.POST['aisle_id'],
                     location=Location.objects.get(id=location_id)
