@@ -41,7 +41,9 @@ def register(request):
                 last_name=request.POST['last_name'],
                 password=pw_hash
             )
-            request.session['user_id'] = User.objects.last().id
+            request.session['id'] = User.objects.last().id
+            request.session['first_name'] = User.objects.last().first_name
+            return redirect('/shelf/profile')
     return redirect('/shelf')
 
 
@@ -51,7 +53,9 @@ def profile(request):
         return redirect('/shelf')
     user = User.objects.get(id=request.session['id'])
     context = {
-        'user': user
+        'user': user,
+        'locations': user.locations.all(),
+        'items': user.items.all()
     }
     return render(request, 'profile.html', context)
 
@@ -258,3 +262,17 @@ def create_store(request):
                     store=store
                 )
     return redirect('/shelf/locations')
+
+def add_favorite_item(request, item_id):
+    user=User.objects.get(id=request.session['id'])
+    item=Item.objects.get(id=item_id)
+    user.items.add(item)
+    print('item worked')
+    return redirect('/shelf/profile')
+
+def add_favorite_location(request, location_id):
+    user=User.objects.get(id=request.session['id'])
+    location=Location.objects.get(id=location_id)
+    user.locations.add(location)
+    print('location worked')
+    return redirect('/shelf/profile')
