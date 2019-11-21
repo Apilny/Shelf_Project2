@@ -163,26 +163,26 @@ def create_item_to_location(request, location_id):
             for key, value in errors.items():
                 messages.error(request, value)
                 return redirect(f'/shelf/{location_id}/items')
-            else:
-                location = Location.objects.get(id=location_id)
+        else:
+            location = Location.objects.get(id=location_id)
+            print(request.POST['aisle_id'])
+            try:
+                aisle=Aisle.objects.get(id=request.POST['aisle_id'])
                 print(request.POST['aisle_id'])
-                try:
-                    aisle=Aisle.objects.get(id=request.POST['aisle_id'])
-                    print(request.POST['aisle_id'])
-                    print('this did work')
-                except:
-                    print('did not work')
-                    aisle = Aisle.objects.create(
-                        description=request.POST['aisle_id'],
-                        location=Location.objects.get(id=location_id)
-                    )
-                finally:
-                    Item.objects.create(
-                        name=request.POST['name'],
-                        price=request.POST['price'],
-                        aisle=aisle,
-                        location=location
-                    )
+                print('this did work')
+            except:
+                print('did not work')
+                aisle = Aisle.objects.create(
+                    description=request.POST['aisle_id'],
+                    location=Location.objects.get(id=location_id)
+                )
+            finally:
+                Item.objects.create(
+                    name=request.POST['name'],
+                    price=request.POST['price'],
+                    aisle=aisle,
+                    location=location
+                )
         return redirect(f'shelf/{location_id}/items')
 
 
