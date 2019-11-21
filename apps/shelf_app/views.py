@@ -56,7 +56,7 @@ def profile(request):
     return render(request, 'profile.html', context)
 
 
-def edit_form(request):
+def profile_edit_form(request):
     context = {
         'user': User.objects.get(id=request.session['id'])
     }
@@ -94,6 +94,22 @@ def items(request):
     }
     return render(request, 'view_items.html', context)
 
+def item_edit_form(request, item_id):
+    context={
+        "item": Item.objects.get(id=item_id)
+    }
+    return render(request, 'edit_item.html', context)
+
+def edit_item(request, item_id):
+    if request.method=='POST':
+        changes = Item.objects.get(id=item_id)
+        changes.name = request.POST['name']
+        changes.price = request.POST['price']
+        changes.aisle.description = request.POST['description']
+        changes.save()
+        return redirect('/shelf/{item_id}/edit')
+    else: 
+        return redirect('view_items.html')
 
 def items_search(request):
     if request.method == 'GET':
@@ -142,7 +158,7 @@ def create_item_to_location(request, location_id):
         location = Location.objects.get(id=location_id)
         try:
             Aisle.objects.get(id=request.POST['aisle_id'])
-            aisle = Aistle.objects.get(id=request.POST['aisle_id'])
+            aisle = Aisle.objects.get(id=request.POST['aisle_id'])
             Item.objects.create(
                 name=request.POST['name'],
                 price=request.POST['price'],

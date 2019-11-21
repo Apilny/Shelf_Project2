@@ -5,8 +5,8 @@ urlpatterns=[
     url(r'^shelf/login$', views.login),
     url(r'^shelf/register$', views.register),
     url(r'^shelf/profile$', views.profile),
-    url(r'^shelf/profile/edit', views.edit_form),
-    url(r'^shelf/edit', views.edit_profile),    
+    url(r'^shelf/profile/edit', views.profile_edit_form),
+    url(r'^shelf/edit$', views.edit_profile),    
     url(r'^shelf/item$', views.items),
     url(r'^shelf/item/search$', views.items_search),
     url(r'^shelf/locations$', views.locations),
@@ -18,7 +18,9 @@ urlpatterns=[
     url(r'shelf/(?P<location_id>\d+)/(?P<food_id>)/update$', views.update_item_at_location),
     url(r'shelf/(?P<aisle_id>\d+)/aisle$',views.view_aisle_items),
     url(r'shelf/(?P<aisle_id>\d+)/aisle/search$',views.aisle_search),
+    url(r'^shelf/(?P<item_id>\d+)/edit$', views.item_edit_form),
+    url(r'^shelf/edit/(?P<item_id>\d+)$', views.edit_item),    
     url(r'shelf/create/store$',views.create_store),
-    url(r'shelf/maps', views.show_map),
+    url(r'shelf/maps$', views.show_map),
     url(r'^logout$', views.logout)
 ]
