@@ -27,7 +27,7 @@ class ItemManager(models.Manager):
             errors['name']="Input name of item"
         if len(data['price'])<=3:
             errors['price']= "Price must be at least three characters"
-        if len(data['description'])<=5:
+        if len(data['aisle_id'])<=0:
             errors['description']="description must be at least 5 characters"
         return errors
 
