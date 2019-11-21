@@ -6,14 +6,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>View Store Location</title>
-    {% load static %}
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
         integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src='http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js'></script>
 </head>
 
 <header class="jumbotron jumbotron-fluid" style="padding-top:0px; padding-bottom: 2px;">
     <nav class="navbar navbar-expand-md navbar-dark bg-dark mb-4">
-        <img src="{% static 'shelf_app/images/shopping_cart.png' %}" width="40px" height="40px" />
         <a class="navbar-brand" href="#">Shelf</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse"
             aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
@@ -63,7 +62,7 @@
             {%for location in store.locations.all%}
             <tr>
                 <td scope="row">{{location.store.name}}</th>
-                <td><a href='/shelf/maps'>{{location.address}} {{location.city}} {{location.state}}
+                <td><a class='navigation' >{{location.address}} {{location.city}} {{location.state}}
                         {{location.zip_code}}</a></td>
                 <td><a href='/shelf/{{location.id}}/items'>Items</a></td>
             </tr>
@@ -74,23 +73,45 @@
     <h3>Add Store</h3>
     <form method='POST' action='/shelf/create/store'>
         {% csrf_token %}
-        <select name='store_name'>
-            <optgroup label='Current Store:' name='store_name'>
-                {%for store in stores%}
-                <option value='{{store.name}}' name='store_name'> {{store.name}} </option>
-                {%endfor%}
-            </optgroup>
-            <option>
-                New Store Name:<input type='text' name='store_name' placeholder="Select New Store Name">
-            </option>
-        </select>
-        Address:<input type='text' name='address' placeholder='0000 address at street'>
-        City:<input type='text' name='city' placeholder='City'>
-        State:<input type='text' name='state' placeholder='State'>
-        Zip Code:<input type='text' name='zip_code' placeholder='5 digit Zip Code'>
-        <button type='submit'>submit</button>
+        <div>
+            <div id='old_store'  style="color: blue; text-decoration: underline;">Pick From Current Stores</div>
+            <p>or</p>
+            <div id='new_store' style="color: blue; text-decoration: underline;">Pick Create New Store</div><br>
+            <div id='store_select'><select name='store_name'><optgroup label='Current Store:' name='store_name'>{%for store in stores%}<option value='{{store.id}}' name='store_name'> {{store.name}} </option>{%endfor%}</optgroup></select></div><br>
+            <p>Address:<input type='text' name='address' placeholder='0000 address at street'></p>
+            <p> City:<input type='text' name='city' placeholder='City'></p>
+            <p> State:<input type='text' name='state' placeholder='State'></p>
+            <p>Zip Code:<input type='text' name='zip_code' placeholder='5 digit Zip Code'></p>
+            <p><button type='submit'>submit</button></p>
+        </div>
     </form>
     <p><a href='/shelf/profile'>Return to your dashboard</a></p>
+    <script>
+        $(document).ready(function () {
+            $('#old_store').click(function () {
+                $('#store_select').empty()
+                $('#store_select').append("<select name='store_name'><optgroup label='Current Store:' name='store_name'>{%for store in stores%}<option value='{{store.id}}' name='store_name'> {{store.name}} {{store.location.address}} </option>{%endfor%}</optgroup></select>")
+            })
+            $('#new_store').click(function () {
+                $('#store_select').empty()
+                $('#store_select').append(" New Store Name:<input type='text' name='store_name' placeholder='Select New Store Name'>")
+            })
+            $('.navigation').click(function () {
+                if (navigator.geolocation)
+                    navigator.geolocation.getCurrentPosition(function (position) {
+                        console.log(position);
+                        var current_long = position.coords.longitude;
+                        var current_lat = position.coords.latitude;
+                        // var destination = 'http://maps.google.com/maps/dir/?api=1&origin' + current_lat + '+' + current_long);
+                        console.log(current_lat, current_long);
+                        $('.navigation').attr('href', 'http://maps.google.com/maps/dir/' + current_lat + '+' + current_long)
+                        // $('.navigate_to').click();
+                    })
+                else
+                    console.log('no geolocation')
+            })
+        })
+    </script>
 
 </body>
 
