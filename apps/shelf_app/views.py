@@ -93,7 +93,7 @@ def logout(request):
 def items(request):
     user = User.objects.get(id=request.session['id'])
     context = {
-        'items': Item.objects.all(),
+        'items': Item.objects.all().order_by('name'),
         'user': user
     }
     return render(request, 'view_items.html', context)
@@ -144,7 +144,7 @@ def location_search(request):
 def location_items(request, location_id):
     location = Location.objects.get(id=location_id)
     context = {
-        'items': location.items.all(),
+        'items': location.items.all().order_by('name'),
         'location': location
     }
     return render(request, 'view_location_items.html', context)
@@ -221,7 +221,7 @@ def update_item_at_location(request, item_id, location_id):
 def view_aisle_items(request, aisle_id):
     aisle = Aisle.objects.get(id=aisle_id)
     context = {
-        'items': aisle.items.all(),
+        'items': aisle.items.all().order_by('name'),
         'aisle': aisle
     }
     return render(request, 'view_aisle.html', context)
