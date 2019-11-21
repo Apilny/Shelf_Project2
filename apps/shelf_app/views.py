@@ -158,35 +158,32 @@ def location_items_search(request, location_id):
 
 def create_item_to_location(request, location_id):
     if request.method == "POST":
-        errors = Item.objects.basic_validator(request.POST)
+    errors = Item.objects.basic_validator(request.POST)
         if len(errors) > 0:
             for key, value in errors.items():
                 messages.error(request, value)
                 return redirect(f'/shelf/{location_id}/items')
             else:
                 location = Location.objects.get(id=location_id)
+                print(request.POST['aisle_id'])
                 try:
-                    Aisle.objects.get(id=request.POST['aisle_id'])
-                    aisle = Aisle.objects.get(id=request.POST['aisle_id'])
-                    Item.objects.create(
-                        name=request.POST['name'],
-                        price=request.POST['price'],
-                        aisle=aisle,
-                        location=location
-                    )
-                    return redirect(f'shelf/{location_id}/items')
+                    aisle=Aisle.objects.get(id=request.POST['aisle_id'])
+                    print(request.POST['aisle_id'])
+                    print('this did work')
                 except:
+                    print('did not work')
                     aisle = Aisle.objects.create(
-                        description=request.POST['description'],
+                        description=request.POST['aisle_id'],
                         location=Location.objects.get(id=location_id)
                     )
+                finally:
                     Item.objects.create(
                         name=request.POST['name'],
                         price=request.POST['price'],
                         aisle=aisle,
                         location=location
                     )
-                    return redirect(f'shelf/{location_id}/items')
+        return redirect(f'shelf/{location_id}/items')
 
 
 def edit_item_at_location(request, item_id, location_id):
