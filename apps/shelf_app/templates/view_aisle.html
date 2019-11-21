@@ -40,7 +40,7 @@
 <h1>{{aisle.location.store.name}}</h1>
 <h2>Aisle {{aisle.description}}</h2>
 
-<form action="shelf/{{aisle.id}}/aisle/search" method="GET">
+<form action="/shelf/{{aisle.id}}/aisle/search" method="GET">
     <p><input type="text" name="search_field" placeholder="Search for items"> <input type="submit" value="Submit"></p>
 </form>
 <p><a href="shelf/{{aisle.location.id}}/items">Return to store</a></p>
