@@ -158,7 +158,7 @@ def location_items_search(request, location_id):
 
 def create_item_to_location(request, location_id):
     if request.method == "POST":
-    errors = Item.objects.basic_validator(request.POST)
+        errors = Item.objects.basic_validator(request.POST)
         if len(errors) > 0:
             for key, value in errors.items():
                 messages.error(request, value)
@@ -242,8 +242,10 @@ def create_store(request):
                 return redirect('/shelf/locations')
         else:
             try:
-                store = Store.objects.get(name=request.POST['store_name'])
+                print(request.POST['store_name'])
+                store = Store.objects.get(id=request.POST['store_name'])
             except:
+                print('did not work')
                 store = Store.objects.create(
                     name=request.POST['store_name']
                 )
@@ -256,9 +258,3 @@ def create_store(request):
                     store=store
                 )
     return redirect('/shelf/locations')
-
-
-def show_map(request):
-    mapbox_access_token = 'pk.eyJ1IjoiY29keW1hbGRvbmFkbzI4IiwiYSI6ImNrMzYzdjRyeDA3ZXUzYmt4MXE3ajI4encifQ.OpwaNlWkZIOU5W1rzfUI4w'
-    return render(request, 'maps.html',
-                  {'mapbox_access_token': 'pk.eyJ1IjoiY29keW1hbGRvbmFkbzI4IiwiYSI6ImNrMzYzdjRyeDA3ZXUzYmt4MXE3ajI4encifQ.OpwaNlWkZIOU5W1rzfUI4w'})
