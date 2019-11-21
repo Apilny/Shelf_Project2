@@ -13,6 +13,7 @@
 
 <header class="jumbotron jumbotron-fluid" style="padding-top:0px; padding-bottom: 2px;">
     <nav class="navbar navbar-expand-md navbar-dark bg-dark mb-4">
+        <img src="{% static 'images/shopping_cart.png' %}" width="40px" height="40px" />
         <a class="navbar-brand" href="#">Shelf</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse"
             aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
@@ -43,6 +44,20 @@
     <p>Account Email: {{user.email}}</p>
     <p>Account Name: {{user.first_name}} {{user.last_name}}</p>
     <p><a href='/shelf/profile/edit'>Edit Account Information</a></p>
+    <div>
+        Favorite Places
+        <div>
+            {%for location in locations%}
+                <a href='/shelf/{{location.id}}/items'>{{location.store.name}}  {{location.address}}  {{location.city}} {{location.state}}</a><br>
+            {%endfor%}
+        </div>
+        Favorite Items
+        <div>
+            {%for item in items%}
+            <a href='/shelf/{{item.location.id}}/items'>{{item.name}}  {{item.price}}  {{item.aisle.description}}</a><br>
+            {%endfor%}
+        </div>
+    </div>
 </body>
 
 </html>
