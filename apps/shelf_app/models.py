@@ -60,6 +60,7 @@ class Location(models.Model):
     state=models.CharField(max_length=50)
     zip_code=models.IntegerField()
     store=models.ForeignKey(Store, related_name='locations')
+    users=models.ManyToManyField(User, related_name='locations')
     created_at=models.DateTimeField(auto_now_add=True)
     updated_at=models.DateTimeField(auto_now=True)
 
