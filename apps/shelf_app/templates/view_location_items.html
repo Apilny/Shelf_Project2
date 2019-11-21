@@ -7,6 +7,7 @@
     <title>Location</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
     integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src='http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js'></script>
 </head>
 <body>
 <header class="jumbotron jumbotron-fluid" style="padding-top:0px; padding-bottom: 2px;">
@@ -63,9 +64,24 @@
     {% csrf_token %}
     Item:<input type='text' name='name' placeholder='Item Name'>
     Price:<input type='text' name='price' placeholder='XXX.OO'>
-    Aisle Description:<input type='text' name='description' placeholder="Aisle number Aisle name">
+    <div id='old_aisle'  style="color: blue; text-decoration: underline;">Pick From Current Aisles</div>
+            <p>or</p>
+            <div id='new_aisle' style="color: blue; text-decoration: underline;">Create New Aisle</div><br>
+            <div id='aisle_select'><select name='aisle_id'><optgroup label='Current Aisles:' name='aisle_id'>{%for aisle in location.aisles.all%}<option value='{{aisle.id}}' name='aisle_id'> {{aisle.description}} </option>{%endfor%}</optgroup></select></div><br>
     <button type='submit'>submit</button>
 </form>
 <p><a href='/shelf/profile'>Return to your dashboard</a></p>
+<script>
+    $(document).ready(function () {
+            $('#old_aisle').click(function () {
+                $('#aisle_select').empty()
+                $('#aisle_select').append("<select name='aisle_id'><optgroup label='Current Aisles:' name='aisle_id'>{%for aisle in location.aisles.all%}<option value='{{aisle.id}}' name='aisle_id'> {{aisle.description}} </option>{%endfor%}</optgroup></select>")
+            })
+            $('#new_aisle').click(function () {
+                $('#aisle_select').empty()
+                $('#aisle_select').append(" New Aisle: <input type='text' name='aisle_id' placeholder='New Aisle Description'>")
+            })
+    })
+</script>
 </body>
 </html>
