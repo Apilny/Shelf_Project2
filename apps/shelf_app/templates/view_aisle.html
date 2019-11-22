@@ -63,6 +63,23 @@
     </tbody>
     {%endfor%}
 </table>
+<div style='margin-left:30%; text-align: center; width:600px;'>
+    <form method='POST' action='/shelf/{{aisle.location.id}}/create_item'>
+        <h3>Add Item</h3>
+        {%if messages%}
+        <ul>
+            {%for message in messages%}
+            <li style='color:red'>{{message}}</li>
+            {%endfor%}
+        </ul>
+        {%endif%}
+        {% csrf_token %}
+        Item:<input class="form-control" id="exampleFormControlInput1" type='text' name='name' placeholder='Item Name'>
+        Price:<input class="form-control" id="exampleFormControlInput1" type='text' name='price' placeholder='XXX.OO'>
+        <input type="hidden" value='{{aisle.id}}' name='aisle_id'>
+        <button type='submit'>submit</button>
+    </form>
+</div>
 <p><a href='/shelf/profile'>Return to your dashboard</a></p>
     
 </body>
