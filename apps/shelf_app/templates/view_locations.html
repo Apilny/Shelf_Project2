@@ -60,7 +60,7 @@
                 <th scope="col">Items</th>
             </tr>
         </thead>
-        <a id='click_for_locations'>CLICK TO UPDATE YOUR LOCATION</a>
+        <button id='click_for_locations'>UPDATE YOUR LOCATION</button>
         <tbody id="table_body">
         </tbody>
     </table>
@@ -106,8 +106,11 @@
                     })
                 else
                     console.log('no geolocation')
+                    $('#table_body').empty()
+                        $('#table_body').append("{%for store in stores%}{%for location in store.locations.all%}<tr><td scope='row'>{{location.store.name}}</th><td><a class='navigation' href='https://www.google.com/maps/dir/?api=1&origina="+current_lat+","+current_long+"&destination={{location.address}}+{{location.city}}+{{location.state}}+{{location.zip_code}}'>Navigate To: {{location.address}} {{location.city}} {{location.state}} {{location.zip_code}}</a></td><td><a href='/shelf/{{location.id}}/items'>Items</a></td><td><a href='/shelf/{{location.id}}/add_favorite_location'>Favorite this Location</a></td></tr>{%endfor%}{%endfor%}")
 
             })
+            $('#click_for_locations').trigger('click')
         })
     </script>
 
