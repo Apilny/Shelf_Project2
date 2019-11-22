@@ -40,54 +40,72 @@
         </div>
     </header>
     <h1>{{location.store.name}}</h1>
-    <form action="shelf/{{location.store.id}}/items/search" method="GET">
+    <h3>{{location.address}}</h3>
+    <h3>{{location.city}}, {{location.state}} {{location.zip_code}}</h3>
+    <form action="/shelf/{{location.store.id}}/items/search" method="GET">
         <p><input type="text" name="search_field" placeholder="Search for items"> <input type="submit" value="Submit">
         </p>
     </form>
 
-<table class="table table-striped table-dark">
-    <thead>
-        <tr>
-            <th scope="col">Item</th>
-            <th scope="col">Price</th>
-            <th scope="col">Aisle</th>
-        </tr>
-    </thead>
-    {%for item in items%}
-    <tbody>
-        <tr>
-            <td scope="row">{{item.name}}</th>
-            <td>${{item.price}}</td>
-            <td><a href='/shelf/{{item.aisle.id}}/aisle'>{{item.aisle.description}}</a></td>
-            <td><a href='/shelf/{{item.id}}/add_favorite_item'>Favorite Item</a></td>
-        </tr>
-    </tbody>
-    {%endfor%}
-</table>
-<h3>Add Item</h3>
-<form method='POST' action='/shelf/{{location.id}}/create_item'>
-    {% csrf_token %}
-    Item:<input type='text' name='name' placeholder='Item Name'>
-    Price:<input type='text' name='price' placeholder='XXX.OO'>
-    <div id='old_aisle'  style="color: blue; text-decoration: underline;">Pick From Current Aisles</div>
+    <table class="table table-striped table-dark">
+        <thead>
+            <tr>
+                <th scope="col">Item</th>
+                <th scope="col">Price</th>
+                <th scope="col">Aisle</th>
+            </tr>
+        </thead>
+        {%for item in items%}
+        <tbody>
+            <tr>
+                <td scope="row">{{item.name}}</th>
+                <td>${{item.price}}</td>
+                <td><a href='/shelf/{{item.aisle.id}}/aisle'>{{item.aisle.description}}</a></td>
+                <td><a href='/shelf/{{item.id}}/add_favorite_item'>Favorite Item</a></td>
+                <td><a href='/shelf/{{item.id}}/edit'>Edit Item</a></td>
+            </tr>
+        </tbody>
+        {%endfor%}
+    </table>
+    <div style='margin-left:25%; text-align: center; width:600px;'>
+        <form method='POST' action='/shelf/{{location.id}}/create_item'>
+            <h3>Add Item</h3>
+            {%if messages%}
+            <ul>
+                {%for message in messages%}
+                <li style='color:red'>{{message}}</li>
+                {%endfor%}
+            </ul>
+            {%endif%}
+            {% csrf_token %}
+            Item:<input class="form-control" id="exampleFormControlInput1" type='text' name='name' placeholder='Item Name'>
+            Price:<input class="form-control" id="exampleFormControlInput1" type='text' name='price' placeholder='XXX.OO'>
+            <div id='old_aisle' style="color: blue; text-decoration: underline;">Pick From Current Aisles</div>
             <p>or</p>
             <div id='new_aisle' style="color: blue; text-decoration: underline;">Create New Aisle</div><br>
-            <div id='aisle_select'><select name='aisle_id'><optgroup label='Current Aisles:' name='aisle_id'>{%for aisle in location.aisles.all%}<option value='{{aisle.id}}' name='aisle_id'> {{aisle.description}} </option>{%endfor%}</optgroup></select></div><br>
-    <button type='submit'>submit</button>
-</form>
-<p><a href='/shelf/profile'>Return to your dashboard</a></p>
-<script>
-    $(document).ready(function () {
+            <div id='aisle_select'>
+                <select class="form-control" name='aisle_id'>
+                    <optgroup class="form-control" label='Current Aisles:' name='aisle_id'>
+                        {%for aisle in location.aisles.all%}
+                        <option value='{{aisle.id}}' name='aisle_id'> {{aisle.description}} </option>
+                        {%endfor%}</optgroup>
+                </select></div><br>
+            <button type='submit'>submit</button>
+        </form>
+    </div>
+    <p><a href='/shelf/profile'>Return to your dashboard</a></p>
+    <script>
+        $(document).ready(function () {
             $('#old_aisle').click(function () {
                 $('#aisle_select').empty()
-                $('#aisle_select').append("<select name='aisle_id'><optgroup label='Current Aisles:' name='aisle_id'>{%for aisle in location.aisles.all%}<option value='{{aisle.id}}' name='aisle_id'> {{aisle.description}} </option>{%endfor%}</optgroup></select>")
+                $('#aisle_select').append("<select class='form-control'name='aisle_id'><optgroup label='Current Aisles:' name='aisle_id'>{%for aisle in location.aisles.all%}<option value='{{aisle.id}}' name='aisle_id'> {{aisle.description}} </option>{%endfor%}</optgroup></select>")
             })
             $('#new_aisle').click(function () {
                 $('#aisle_select').empty()
-                $('#aisle_select').append(" New Aisle: <input type='text' name='aisle_id' placeholder='New Aisle Description'>")
+                $('#aisle_select').append(" New Aisle information: <input class='form-control' type='text' name='aisle_id' placeholder='New Aisle Description'>")
             })
-    })
-</script>
+        })
+    </script>
 </body>
 
 </html>
