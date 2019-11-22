@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -99,25 +100,29 @@
         $(document).ready(function () {
             $('#old_store').click(function () {
                 $('#store_select').empty()
-                $('#store_select').append("<select class='form-control' name='store_name'><optgroup label='Current Store:' name='store_name'>{%for store in stores%}<option value='{{store.id}}' name='store_name'> {{store.name}} {{store.location.address}} </option>{%endfor%}</optgroup></select>")
+                $('#store_select').append("<select name='store_name'><optgroup label='Current Store:' name='store_name'>{%for store in stores%}<option value='{{store.id}}' name='store_name'> {{store.name}} {{store.location.address}} </option>{%endfor%}</optgroup></select>")
             })
             $('#new_store').click(function () {
                 $('#store_select').empty()
-                $('#store_select').append(" New Store Name:<input type='text' class='form-control' name='store_name' placeholder='Select New Store Name'>")
+                $('#store_select').append(" New Store Name:<input type='text' name='store_name' placeholder='Select New Store Name'>")
             })
-            $('.navigation').click(function () {
+            $('#click_for_locations').click(function () {
+                console.log('hello');
+                console.log($(this).text());
                 if (navigator.geolocation)
                     navigator.geolocation.getCurrentPosition(function (position) {
                         console.log(position);
                         var current_long = position.coords.longitude;
                         var current_lat = position.coords.latitude;
-                        // var destination = 'http://maps.google.com/maps/dir/?api=1&origin' + current_lat + '+' + current_long);
+                        var location= $(this).text();
+                        console.log (location);
                         console.log(current_lat, current_long);
-                        $('.navigation').attr('href', 'http://maps.google.com/maps/dir/' + current_lat + '+' + current_long)
-                        // $('.navigate_to').click();
+                        $('#table_body').empty()
+                        $('#table_body').append("{%for store in stores%}{%for location in store.locations.all%}<tr><td scope='row'>{{location.store.name}}</th><td><a class='navigation' href='https://www.google.com/maps/dir/?api=1&origina="+current_lat+","+current_long+"&destination={{location.address}}+{{location.city}}+{{location.state}}+{{location.zip_code}}'>Navigate To: {{location.address}} {{location.city}} {{location.state}} {{location.zip_code}}</a></td><td><a href='/shelf/{{location.id}}/items'>Items</a></td><td><a href='/shelf/{{location.id}}/add_favorite_location'>Favorite this Location</a></td></tr>{%endfor%}{%endfor%}")
                     })
                 else
                     console.log('no geolocation')
+
             })
         })
     </script>
