@@ -9,6 +9,7 @@
     {% load static %}
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
         integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src='http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js'></script>
 </head>
 
 <body>
@@ -66,7 +67,46 @@
         </tbody>
         {%endfor%}
     </table>
+    <div style='margin-left:30%; text-align: center; width:600px;'>
+        <form method='POST' action='/shelf/create_item'>
+            <h3>Add Item</h3>
+            {%if messages%}
+            <ul>
+                {%for message in messages%}
+                <li style='color:red'>{{message}}</li>
+                {%endfor%}
+            </ul>
+            {%endif%}
+            {% csrf_token %}
+            Item:<input class="form-control" id="exampleFormControlInput1" type='text' name='name' placeholder='Item Name'>
+            Price:<input class="form-control" id="exampleFormControlInput1" type='text' name='price' placeholder='XXX.OO'>
+            <div id='old_aisle' style="color: blue; text-decoration: underline;">Pick From Current Aisles</div>
+            <p>or</p>
+            <div id='new_aisle' style="color: blue; text-decoration: underline;">Create New Aisle</div><br>
+            <div id='aisle_select'>
+                <select class="form-control" name='aisle_id'>
+                    <optgroup class="form-control" label='Current Aisles:' name='aisle_id'>
+                        {%for aisle in aisles%}
+                        <option value='{{aisle.id}}' name='aisle_id'> {{aisle.location.store.name}}  {{aisle.location.address}}  {{aisle.description}} </option>
+                        {%endfor%}</optgroup>
+                </select><br><a href='/shelf/locations'>New Store</a></div><br>
+            <button type='submit'>submit</button>
+        </form>
+    </div>
     <p><a href='/shelf/profile'>Return to your dashboard</a></p>
+    <script>
+        $(document).ready(function () {
+            $('#old_aisle').click(function () {
+                $('#aisle_select').empty()
+                $('#aisle_select').append("<select class='form-control'name='aisle_id'><optgroup label='Current Aisles:' name='aisle_id'>{%for aisle in aisles%}<option value='{{aisle.id}}' name='aisle_id'>{{aisle.location.store.name}}  {{aisle.location.address}} {{aisle.description}} </option>{%endfor%}</optgroup></select><br><a href='/shelf/locations'>New Store</a>")
+            })
+            $('#new_aisle').click(function () {
+                $('#aisle_select').empty()
+                $('#aisle_select').append(" New Aisle information: <input class='form-control' type='text' name='aisle_id' placeholder='New Aisle Description'><br><select class='form-control' name='location_id'><optgroup class='form-control' label='Current Locations:' name='location_id'>{%for location in locations%}<option value='{{location.id}}' name='location_id'> {{location.store.name}}  {{location.address}}  {{description}} </option>{%endfor%}</optgroup></select><br><a href='/shelf/locations'>New Store</a>")
+
+            })
+        })
+    </script>
 </body>
 
 </html>
