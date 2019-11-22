@@ -58,9 +58,9 @@
             <tr>
                 <td scope="row">{{item.name}}</th>
                 <td>${{item.price}}</td>
-                <td><a href="shelf/{{item.location.id}}/items">{{item.location.store.name}} -
+                <td><a href="/shelf/{{item.location.id}}/items">{{item.location.store.name}} -
                         {{item.location.city}}, {{item.location.state}}</a></td>
-                <td><a href="shelf/{{item.aisle.id}}/aisle">{{item.aisle.description}}</a></td>
+                <td><a href="/shelf/{{item.aisle.id}}/aisle">{{item.aisle.description}}</a></td>
                 <td><a href='/shelf/{{item.id}}/add_favorite_item'>Favorite Item</a></td>
             </tr>
         </tbody>
