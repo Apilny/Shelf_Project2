@@ -61,13 +61,13 @@
                 <td scope="row">{{item.name}}</th>
                 <td>${{item.price}}</td>
                 <td><a href='/shelf/{{item.aisle.id}}/aisle'>{{item.aisle.description}}</a></td>
-                <td><a href='/shelf/{{item.id}}/add_favorite_item'>Favorite Item</a></td>
+                <td><a id='favorite' href='/shelf/{{item.id}}/add_favorite_item'>favorite Item</a></td>
                 <td><a href='/shelf/{{item.id}}/edit'>Edit Item</a></td>
             </tr>
         </tbody>
         {%endfor%}
     </table>
-    <div style='margin-left:25%; text-align: center; width:600px;'>
+    <div style='margin-left:30%; text-align: center; width:600px;'>
         <form method='POST' action='/shelf/{{location.id}}/create_item'>
             <h3>Add Item</h3>
             {%if messages%}

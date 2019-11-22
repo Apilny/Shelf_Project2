@@ -35,27 +35,24 @@
     </nav>
     <div class="container">
         <h1 class="display-4">Hi {{request.session.first_name}},</h1>
-        <p class="lead">Account information</p>
+        <p class="lead">Account information: ---- {{user.email}} ---- {{user.first_name}} ---- {{user.last_name}} ---- <a href='/shelf/profile/edit'>Edit Account Information</a></p>
     </div>
 </header>
 
 <body>
     <!-- <p>Account Number: {{user.id}}</p> -->
-    <p>Account Email: {{user.email}}</p>
-    <p>Account Name: {{user.first_name}} {{user.last_name}}</p>
-    <p><a href='/shelf/profile/edit'>Edit Account Information</a></p>
-    <div>
-        <b>Favorite Places</b>
-        <div>
+    <div style="text-align: center;">
+        <h2 style='color:rgb(21, 25, 39)'>Favorite Places</h2>
+        <div style="height:200px; width: 40%; overflow: scroll; margin:20px;margin-left:30%; padding: 10px; border:3px rgb(21, 25, 39) solid; border-radius:7px;">
             {%for location in locations%}
-                <a href='/shelf/{{location.id}}/items'>{{location.store.name}}  {{location.address}}  {{location.city}} {{location.state}}</a><br>
+                <a style='font-size: 20px; ' href='/shelf/{{location.id}}/items'>{{location.store.name}} -- {{location.address}} -- {{location.city}} -- {{location.state}}</a>    <a style ='color:green'href='/shelf/unfavorite/{{location.id}}/location'>**UNFAVORITE**</a><br>
             {%endfor%}
         </div>
         <br>
-        <b>Favorite Items</b>
-        <div>
+        <h2 style='color:rgb(21, 25, 39)'>Favorite Items</h2>
+        <div style="height:200px; width: 40%; overflow: scroll;margin:20px; margin-left:30%; padding: 10px;border:3px rgb(21, 25, 39) solid; border-radius:7px;">
             {%for item in items%}
-            <a href='/shelf/{{item.location.id}}/items'>{{item.name}}  {{item.price}}  {{item.aisle.description}}</a><br>
+            <a style='font-size: 20px;' href='/shelf/{{item.location.id}}/items'>{{item.name}} -- {{item.price}} -- {{item.aisle.description}}</a>     <a style ='color:green' href='/shelf/unfavorite/{{item.id}}/item'>**UNFAVORITE**</a><br>
             {%endfor%}
         </div>
     </div>
