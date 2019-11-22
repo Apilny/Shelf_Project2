@@ -38,9 +38,12 @@
     </div>
 </header>
 <h1>{{aisle.location.store.name}}</h1>
-<h2>Aisle {{aisle.description}}</h2>
+<h3>{{aisle.location.address}}</h3>
+<h3>{{aisle.location.city}}, {{aisle.location.state}} {{aisle.location.zip_code}}</h3>
+<br>
+<h3>{{aisle.description}}</h3>
 
-<form action="shelf/{{aisle.id}}/aisle/search" method="GET">
+<form action="/shelf/{{aisle.id}}/aisle/search" method="GET">
     <p><input type="text" name="search_field" placeholder="Search for items"> <input type="submit" value="Submit"></p>
 </form>
 <p><a href="shelf/{{aisle.location.id}}/items">Return to store</a></p>
