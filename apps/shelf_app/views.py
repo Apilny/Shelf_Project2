@@ -54,8 +54,8 @@ def profile(request):
     user = User.objects.get(id=request.session['id'])
     context = {
         'user': user,
-        'locations': user.locations.all(),
-        'items': user.items.all()
+        'locations': user.locations.all().order_by('address'),
+        'items': user.items.all().order_by('name')
     }
     return render(request, 'profile.html', context)
 
@@ -94,7 +94,9 @@ def items(request):
     user = User.objects.get(id=request.session['id'])
     context = {
         'items': Item.objects.all().order_by('name'),
-        'user': user
+        'user': user,
+        'locations': Location.objects.all(),
+        'aisles': Aisle.objects.all()
     }
     return render(request, 'view_items.html', context)
 
@@ -200,6 +202,37 @@ def create_item_to_location(request, location_id):
                     location=location
                 )
         return redirect(f'/shelf/{location_id}/items')
+def create_item(request):
+    if request.method == "POST":
+        errors = Item.objects.basic_validator(request.POST)
+        if len(errors) > 0:
+            for key, value in errors.items():
+                messages.error(request, value)
+                return redirect('/shelf/item')
+        else:
+            print(request.POST['aisle_id'])
+            try:
+                print('inside try')
+                aisle=Aisle.objects.get(id=request.POST['aisle_id'])
+                location=aisle.location
+                print(request.POST['aisle_id'])
+            except:
+                print('inside except')
+                location=Location.objects.get(id=request.POST['location_id'])
+                aisle = Aisle.objects.create(
+                    description=request.POST['aisle_id'],
+                    location=location
+                )
+                print(aisle)
+            finally:
+                print('inside finally')
+                Item.objects.create(
+                    name=request.POST['name'],
+                    price=request.POST['price'],
+                    aisle=aisle,
+                    location=location
+                )
+                return redirect('/shelf/item')
 
 
 def edit_item_at_location(request, item_id, location_id):
@@ -289,5 +322,21 @@ def add_favorite_location(request, location_id):
     user=User.objects.get(id=request.session['id'])
     location=Location.objects.get(id=location_id)
     user.locations.add(location)
+    print('location worked')
+    return redirect('/shelf/profile')
+
+def unfavorite_item(request, item_id):
+    user=User.objects.get(id=request.session['id'])
+    item=Item.objects.get(id=item_id)
+    user.items=user.items.exclude(id=item_id)
+    user.save()
+    print('item worked')
+    return redirect('/shelf/profile')
+
+def unfavorite_location(request, location_id):
+    user=User.objects.get(id=request.session['id'])
+    location=Location.objects.get(id=location_id)
+    user.locations=user.locations.exclude(id=location_id)
+    user.save()
     print('location worked')
     return redirect('/shelf/profile')
