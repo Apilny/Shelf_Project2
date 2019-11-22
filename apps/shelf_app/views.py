@@ -123,7 +123,7 @@ def edit_item(request, item_id):
             changes.price = request.POST['price']
             changes.aisle.description = request.POST['aisle_id']
             changes.save()
-            return redirect(f'/shelf/item')
+            return redirect(f'/shelf/{changes.location.id}/items')
     else:
         return redirect('/shelf/item')
 
