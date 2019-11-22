@@ -19,6 +19,18 @@ class UserManager(models.Manager):
             errors['password']='passwords do not match'
         return errors
 
+
+class ItemManager(models.Manager):
+    def basic_validator(self, data):
+        errors={}
+        if len(data['name'])<=1:
+            errors['name']="Input name of item"
+        if len(data['price'])<=3:
+            errors['price']= "Price must be at least three characters"
+        if len(data['aisle_id'])<=0:
+            errors['description']="description must be at least 5 characters"
+        return errors
+
 class User(models.Model):
     email=models.CharField(max_length=50)
     first_name=models.CharField(max_length=50)
@@ -48,6 +60,7 @@ class Location(models.Model):
     state=models.CharField(max_length=50)
     zip_code=models.IntegerField()
     store=models.ForeignKey(Store, related_name='locations')
+    users=models.ManyToManyField(User, related_name='locations')
     created_at=models.DateTimeField(auto_now_add=True)
     updated_at=models.DateTimeField(auto_now=True)
 
@@ -65,4 +78,5 @@ class Item(models.Model):
     users=models.ManyToManyField(User,related_name='items')
     created_at=models.DateTimeField(auto_now_add=True)
     updated_at=models.DateTimeField(auto_now=True)
+    objects=ItemManager()
 

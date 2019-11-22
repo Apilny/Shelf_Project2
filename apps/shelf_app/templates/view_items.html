@@ -6,40 +6,44 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Item View</title>
+    {% load static %}
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
         integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src='http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js'></script>
 </head>
-<header class="jumbotron jumbotron-fluid" style="padding-top:0px; padding-bottom: 2px;">
-    <nav class="navbar navbar-expand-md navbar-dark bg-dark mb-4">
-        <a class="navbar-brand" href="#">Shelf</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse"
-            aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse d-flex flex-row-reverse" id="navbarNav">
-            <ul class="navbar-nav">
-                <li class="nav-item active">
-                    <a class="nav-link" href='/shelf/profile'>Your Profile</a>
-                </li>
-                <li class="nav-item active">
-                    <a class="nav-link" href='/shelf/locations'>Search by Location</a>
-                </li>
-                <li class="nav-item active">
-                    <a class="nav-link" href='/logout'>logout</a>
-                </li>
-            </ul>
-        </div>
-    </nav>
-    <div class="container">
-        <h1 class="display-4">Hi {{user.first_name}},</h1>
-        <p class="lead">Search by item</p>
-    </div>
-</header>
 
 <body>
+    <header class="jumbotron jumbotron-fluid" style="padding-top:0px; padding-bottom: 2px;">
+        <nav class="navbar navbar-expand-md navbar-dark bg-dark mb-4">
+            <img src="{% static 'images/shopping_cart.png' %}" width="40px" height="40px" />
+            <a class="navbar-brand" href="#">Shelf</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse"
+                aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse d-flex flex-row-reverse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item active">
+                        <a class="nav-link" href='/shelf/locations'>Search by Location</a>
+                    </li>
+                    <li class="nav-item active">
+                        <a class="nav-link" href='/shelf/profile'>Your Profile</a>
+                    </li>
+                    <li class="nav-item active">
+                        <a class="nav-link" href='/logout'>logout</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+        <div class="container">
+            <h1 class="display-4">Hi {{request.session.first_name}},</h1>
+            <p class="lead">Search by item</p>
+        </div>
+    </header>
+
     <form action="/shelf/item/search" method="GET">
-        <p>Search: <input type="text" name="search_field" placeholder="Search for items"></p>
-        <input type="submit" value="Submit">
+        <p><input type="text" name="search_field" placeholder="Search for items"> <input type="submit" value="Submit">
+        </p>
     </form>
     <table class="table table-striped table-dark">
         <thead>
@@ -55,13 +59,54 @@
             <tr>
                 <td scope="row">{{item.name}}</th>
                 <td>${{item.price}}</td>
-                <td>{{item.location.store.name}}-{{item.location.city}},{{item.location.state}}</td>
-                <td><a href='/shelf/{{item.aisle.id}}/aisle'>{{item.aisle.description}}</a></td>
+                <td><a href="/shelf/{{item.location.id}}/items">{{item.location.store.name}} -
+                        {{item.location.city}}, {{item.location.state}}</a></td>
+                <td><a href="/shelf/{{item.aisle.id}}/aisle">{{item.aisle.description}}</a></td>
+                <td><a href='/shelf/{{item.id}}/add_favorite_item'>Favorite Item</a></td>
             </tr>
         </tbody>
         {%endfor%}
     </table>
-    <a href='/shelf/profile'>dashboard</a>
+    <div style='margin-left:30%; text-align: center; width:600px;'>
+        <form method='POST' action='/shelf/create_item'>
+            <h3>Add Item</h3>
+            {%if messages%}
+            <ul>
+                {%for message in messages%}
+                <li style='color:red'>{{message}}</li>
+                {%endfor%}
+            </ul>
+            {%endif%}
+            {% csrf_token %}
+            Item:<input class="form-control" id="exampleFormControlInput1" type='text' name='name' placeholder='Item Name'>
+            Price:<input class="form-control" id="exampleFormControlInput1" type='text' name='price' placeholder='XXX.OO'>
+            <div id='old_aisle' style="color: blue; text-decoration: underline;">Pick From Current Aisles</div>
+            <p>or</p>
+            <div id='new_aisle' style="color: blue; text-decoration: underline;">Create New Aisle</div><br>
+            <div id='aisle_select'>
+                <select class="form-control" name='aisle_id'>
+                    <optgroup class="form-control" label='Current Aisles:' name='aisle_id'>
+                        {%for aisle in aisles%}
+                        <option value='{{aisle.id}}' name='aisle_id'> {{aisle.location.store.name}}  {{aisle.location.address}}  {{aisle.description}} </option>
+                        {%endfor%}</optgroup>
+                </select><br><a href='/shelf/locations'>New Store</a></div><br>
+            <button type='submit'>submit</button>
+        </form>
+    </div>
+    <p><a href='/shelf/profile'>Return to your dashboard</a></p>
+    <script>
+        $(document).ready(function () {
+            $('#old_aisle').click(function () {
+                $('#aisle_select').empty()
+                $('#aisle_select').append("<select class='form-control'name='aisle_id'><optgroup label='Current Aisles:' name='aisle_id'>{%for aisle in aisles%}<option value='{{aisle.id}}' name='aisle_id'>{{aisle.location.store.name}}  {{aisle.location.address}} {{aisle.description}} </option>{%endfor%}</optgroup></select><br><a href='/shelf/locations'>New Store</a>")
+            })
+            $('#new_aisle').click(function () {
+                $('#aisle_select').empty()
+                $('#aisle_select').append(" New Aisle information: <input class='form-control' type='text' name='aisle_id' placeholder='New Aisle Description'><br><select class='form-control' name='location_id'><optgroup class='form-control' label='Current Locations:' name='location_id'>{%for location in locations%}<option value='{{location.id}}' name='location_id'> {{location.store.name}}  {{location.address}}  {{description}} </option>{%endfor%}</optgroup></select><br><a href='/shelf/locations'>New Store</a>")
+
+            })
+        })
+    </script>
 </body>
 
 </html>

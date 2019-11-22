@@ -17,11 +17,11 @@ def login(request):
             return redirect('/shelf')
         if bcrypt.checkpw(request.POST['password'].encode(), user.password.encode()):
             request.session['id'] = user.id
+            request.session['first_name'] = user.first_name
             return redirect('/shelf/profile')
         else:
             messages.error(request, 'E-Mail or Password is incorrect')
             return redirect('/shelf')
-
     return redirect('/shelf')
 
 
@@ -41,8 +41,9 @@ def register(request):
                 last_name=request.POST['last_name'],
                 password=pw_hash
             )
-            request.session['user_id'] = User.objects.last().id
-
+            request.session['id'] = User.objects.last().id
+            request.session['first_name'] = User.objects.last().first_name
+            return redirect('/shelf/profile')
     return redirect('/shelf')
 
 
@@ -52,9 +53,36 @@ def profile(request):
         return redirect('/shelf')
     user = User.objects.get(id=request.session['id'])
     context = {
-        'user': user
+        'user': user,
+        'locations': user.locations.all().order_by('address'),
+        'items': user.items.all().order_by('name')
     }
     return render(request, 'profile.html', context)
+
+
+def profile_edit_form(request):
+    context = {
+        'user': User.objects.get(id=request.session['id'])
+    }
+    return render(request, "edit_user.html", context)
+
+
+def edit_profile(request):
+    if request.method == 'POST':
+        errors = User.objects.basic_validator(request.POST)
+        if len(errors) > 0:
+            for key, value in errors.items():
+                messages.error(request, value)
+                return redirect('/shelf/profile/edit')
+        else:
+            change = User.objects.get(id=request.session['id'])
+            change.email = request.POST['email']
+            change.first_name = request.POST['first_name']
+            change.last_name = request.POST['last_name']
+            change.password = request.POST['password']
+            change.save()
+            return redirect('/shelf/profile')
+    return redirect('/shelf')
 
 
 def logout(request):
@@ -65,74 +93,146 @@ def logout(request):
 def items(request):
     user = User.objects.get(id=request.session['id'])
     context = {
-        'items': Item.objects.all(),
-        'user': user
+        'items': Item.objects.all().order_by('name'),
+        'user': user,
+        'locations': Location.objects.all(),
+        'aisles': Aisle.objects.all()
     }
     return render(request, 'view_items.html', context)
 
+
+def item_edit_form(request, item_id):
+    item= Item.objects.get(id=item_id)
+    context = {
+        "item": Item.objects.get(id=item_id),
+        "location": item.location
+    }
+    return render(request, 'edit_item.html', context)
+
+
+def edit_item(request, item_id):
+    if request.method == 'POST':
+        errors = Item.objects.basic_validator(request.POST)
+        if len(errors) > 0:
+            for key, value in errors.items():
+                messages.error(request, value)
+                return redirect(f'/shelf/edit/{item_id}')
+        else:
+            changes = Item.objects.get(id=item_id)
+            changes.name = request.POST['name']
+            changes.price = request.POST['price']
+            changes.aisle.description = request.POST['aisle_id']
+            changes.save()
+            return redirect(f'/shelf/{changes.location.id}/items')
+    else:
+        return redirect('/shelf/item')
+
+
 def items_search(request):
     if request.method == 'GET':
-        context={
+        context = {
             'items': Item.objects.filter(name__icontains=request.GET['search_field'])
         }
-    return render (request, 'view_items.html',context)
+    return render(request, 'view_items.html', context)
+
 
 def locations(request):
     context = {
-        'user': User.objects.get(id=request.session['id']),
         'stores': Store.objects.all().order_by('name')
     }
     return render(request, 'view_locations.html', context)
 
+
 def location_search(request):
     if request.method == 'GET':
-        context={
-            'stores': Store.objects.filter(name__icontains=request.GET['search_field'])
-        }
-    return render(request, 'view_locations.html', context)
+        if request.GET['search_field'] == "":
+            return redirect('/shelf/locations')
+        else:
+            context = {
+                'stores': Store.objects.filter(name__icontains=request.GET['search_field'])
+            }
+        return render(request, 'view_locations.html', context)
+
 
 def location_items(request, location_id):
     location = Location.objects.get(id=location_id)
     context = {
-        'items': location.items.all(),
+        'items': location.items.all().order_by('name'),
         'location': location
     }
     return render(request, 'view_location_items.html', context)
 
+
 def location_items_search(request, location_id):
     if request.method == 'GET':
-        location=Location.objects.get(id=location_id)
-        context={
-            'items': location.items.filter(name__icontains=request.GET['search_field']),
-            'location': location
-        }
-    return render(request, 'view_location_items.html',context)
+        if request.GET['search_field'] == "":
+            return redirect(f'/shelf/{location_id}/items')
+        else:
+            location = Location.objects.get(id=location_id)
+            context = {
+                'items': location.items.filter(name__icontains=request.GET['search_field']),
+                'location': location
+            }
+        return render(request, 'view_location_items.html', context)
+
 
 def create_item_to_location(request, location_id):
     if request.method == "POST":
-        location = Location.objects.get(id=location_id)
-        try:
-            Aisle.objects.get(id=request.POST['aisle_id'])
-            aisle = Aistle.objects.get(id=request.POST['aisle_id'])
-            Item.objects.create(
-                name=request.POST['name'],
-                price=request.POST['price'],
-                aisle=aisle,
-                location=location
-            )
-            return redirect(f'shelf/{location_id}/items')
-        except:
-            aisle = Aisle.objects.create(
-                description=request.POST['description'],
-                location=Location.objects.get(id=location_id)
-            )
-            Item.objects.create(
-                name=request.POST['name'],
-                price=request.POST['price'],
-                aisle=aisle,
-                location=location
-            )
-            return redirect(f'shelf/{location_id}/items')
+        errors = Item.objects.basic_validator(request.POST)
+        if len(errors) > 0:
+            for key, value in errors.items():
+                messages.error(request, value)
+                return redirect(f'/shelf/{location_id}/items')
+        else:
+            location = Location.objects.get(id=location_id)
+            print(request.POST['aisle_id'])
+            try:
+                aisle=Aisle.objects.get(id=request.POST['aisle_id'])
+                print(request.POST['aisle_id'])
+            except:
+                aisle = Aisle.objects.create(
+                    description=request.POST['aisle_id'],
+                    location=Location.objects.get(id=location_id)
+                )
+            finally:
+                Item.objects.create(
+                    name=request.POST['name'],
+                    price=request.POST['price'],
+                    aisle=aisle,
+                    location=location
+                )
+        return redirect(f'/shelf/{location_id}/items')
+def create_item(request):
+    if request.method == "POST":
+        errors = Item.objects.basic_validator(request.POST)
+        if len(errors) > 0:
+            for key, value in errors.items():
+                messages.error(request, value)
+                return redirect('/shelf/item')
+        else:
+            print(request.POST['aisle_id'])
+            try:
+                print('inside try')
+                aisle=Aisle.objects.get(id=request.POST['aisle_id'])
+                location=aisle.location
+                print(request.POST['aisle_id'])
+            except:
+                print('inside except')
+                location=Location.objects.get(id=request.POST['location_id'])
+                aisle = Aisle.objects.create(
+                    description=request.POST['aisle_id'],
+                    location=location
+                )
+                print(aisle)
+            finally:
+                print('inside finally')
+                Item.objects.create(
+                    name=request.POST['name'],
+                    price=request.POST['price'],
+                    aisle=aisle,
+                    location=location
+                )
+                return redirect('/shelf/item')
 
 
 def edit_item_at_location(request, item_id, location_id):
@@ -151,7 +251,7 @@ def update_item_at_location(request, item_id, location_id):
         item.price = request.POST['price']
         try:
             Aisle.objects.get(id=request.POST['aistle_id'])
-            aistle = Aistle.objects.get(id=request.POST['aistle_id'])
+            aistle = Aisle.objects.get(id=request.POST['aistle_id'])
             item.aistle = aistle
             return redirect(f'shelf/{location_id}/items')
         except:
@@ -160,25 +260,30 @@ def update_item_at_location(request, item_id, location_id):
                 location=Location.objects.get(id=location_id),
                 aistle=aistle
             )
-            return redirect(f'shelf/{location_id}/items')
+            return redirect(f'/shelf/{location_id}/items')
 
 
 def view_aisle_items(request, aisle_id):
-    aisle=Aisle.objects.get(id=aisle_id)
-    context={
-        'items': aisle.items.all(),
+    aisle = Aisle.objects.get(id=aisle_id)
+    context = {
+        'items': aisle.items.all().order_by('name'),
         'aisle': aisle
     }
     return render(request, 'view_aisle.html', context)
 
+
 def aisle_search(request, aisle_id):
     if request.method == 'GET':
-        aisle=Aisle.objects.get(id=aisle_id)
-        context={
-            'items': aisle.items.filter(name__icontains=request.GET['search_field']),
-            'aisle': aisle
-        }
-    return render(request, 'view_aisle.html', context)
+        if request.GET['search_field'] == "":
+            return redirect(f'/shelf/{aisle_id}/aisle')
+        else:
+            aisle = Aisle.objects.get(id=aisle_id)
+            context = {
+                'items': aisle.items.filter(name__icontains=request.GET['search_field']),
+                'aisle': aisle
+            }
+        return render(request, 'view_aisle.html', context)
+
 
 def create_store(request):
     if request.method == "POST":
@@ -189,8 +294,10 @@ def create_store(request):
                 return redirect('/shelf/locations')
         else:
             try:
-                store = Store.objects.get(name=request.POST['store_name'])
+                print(request.POST['store_name'])
+                store = Store.objects.get(id=request.POST['store_name'])
             except:
+                print('did not work')
                 store = Store.objects.create(
                     name=request.POST['store_name']
                 )
@@ -204,7 +311,32 @@ def create_store(request):
                 )
     return redirect('/shelf/locations')
 
-def show_map(request):
-    mapbox_access_token = 'pk.eyJ1IjoiY29keW1hbGRvbmFkbzI4IiwiYSI6ImNrMzYzdjRyeDA3ZXUzYmt4MXE3ajI4encifQ.OpwaNlWkZIOU5W1rzfUI4w'
-    return render(request, 'maps.html',
-        {'mapbox_access_token':'pk.eyJ1IjoiY29keW1hbGRvbmFkbzI4IiwiYSI6ImNrMzYzdjRyeDA3ZXUzYmt4MXE3ajI4encifQ.OpwaNlWkZIOU5W1rzfUI4w' })
+def add_favorite_item(request, item_id):
+    user=User.objects.get(id=request.session['id'])
+    item=Item.objects.get(id=item_id)
+    user.items.add(item)
+    print('item worked')
+    return redirect('/shelf/profile')
+
+def add_favorite_location(request, location_id):
+    user=User.objects.get(id=request.session['id'])
+    location=Location.objects.get(id=location_id)
+    user.locations.add(location)
+    print('location worked')
+    return redirect('/shelf/profile')
+
+def unfavorite_item(request, item_id):
+    user=User.objects.get(id=request.session['id'])
+    item=Item.objects.get(id=item_id)
+    user.items=user.items.exclude(id=item_id)
+    user.save()
+    print('item worked')
+    return redirect('/shelf/profile')
+
+def unfavorite_location(request, location_id):
+    user=User.objects.get(id=request.session['id'])
+    location=Location.objects.get(id=location_id)
+    user.locations=user.locations.exclude(id=location_id)
+    user.save()
+    print('location worked')
+    return redirect('/shelf/profile')

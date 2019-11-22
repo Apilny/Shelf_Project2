@@ -179,3 +179,5 @@ dmypy.json
 .history
 
 # End of https://www.gitignore.io/api/python,django,visualstudiocode
+*.sqlite3
+db.sqlite3
