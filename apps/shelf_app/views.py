@@ -218,7 +218,7 @@ def update_item_at_location(request, item_id, location_id):
         item.price = request.POST['price']
         try:
             Aisle.objects.get(id=request.POST['aistle_id'])
-            aistle = Aistle.objects.get(id=request.POST['aistle_id'])
+            aistle = Aisle.objects.get(id=request.POST['aistle_id'])
             item.aistle = aistle
             return redirect(f'shelf/{location_id}/items')
         except:
