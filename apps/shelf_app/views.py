@@ -121,7 +121,7 @@ def edit_item(request, item_id):
             changes.price = request.POST['price']
             changes.aisle.description = request.POST['aisle_id']
             changes.save()
-            return redirect(f'/shelf/item')
+            return redirect(f'/shelf/{changes.location.id}/items')
     else:
         return redirect('/shelf/item')
 
@@ -199,7 +199,7 @@ def create_item_to_location(request, location_id):
                     aisle=aisle,
                     location=location
                 )
-        return redirect(f'shelf/{location_id}/items')
+        return redirect(f'/shelf/{location_id}/items')
 
 
 def edit_item_at_location(request, item_id, location_id):
@@ -227,7 +227,7 @@ def update_item_at_location(request, item_id, location_id):
                 location=Location.objects.get(id=location_id),
                 aistle=aistle
             )
-            return redirect(f'shelf/{location_id}/items')
+            return redirect(f'/shelf/{location_id}/items')
 
 
 def view_aisle_items(request, aisle_id):
