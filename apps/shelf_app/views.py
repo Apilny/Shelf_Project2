@@ -54,8 +54,8 @@ def profile(request):
     user = User.objects.get(id=request.session['id'])
     context = {
         'user': user,
-        'locations': user.locations.all(),
-        'items': user.items.all()
+        'locations': user.locations.all().order_by('address'),
+        'items': user.items.all().order_by('name')
     }
     return render(request, 'profile.html', context)
 
@@ -322,5 +322,21 @@ def add_favorite_location(request, location_id):
     user=User.objects.get(id=request.session['id'])
     location=Location.objects.get(id=location_id)
     user.locations.add(location)
+    print('location worked')
+    return redirect('/shelf/profile')
+
+def unfavorite_item(request, item_id):
+    user=User.objects.get(id=request.session['id'])
+    item=Item.objects.get(id=item_id)
+    user.items=user.items.exclude(id=item_id)
+    user.save()
+    print('item worked')
+    return redirect('/shelf/profile')
+
+def unfavorite_location(request, location_id):
+    user=User.objects.get(id=request.session['id'])
+    location=Location.objects.get(id=location_id)
+    user.locations=user.locations.exclude(id=location_id)
+    user.save()
     print('location worked')
     return redirect('/shelf/profile')

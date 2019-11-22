@@ -24,5 +24,7 @@ urlpatterns=[
     url(r'^shelf/create/store$',views.create_store),
     url(r'^shelf/(?P<item_id>\d+)/add_favorite_item$', views.add_favorite_item),
     url(r'^shelf/(?P<location_id>\d+)/add_favorite_location$', views.add_favorite_location),
+    url(r'^shelf/unfavorite/(?P<item_id>\d+)/item$', views.unfavorite_item),
+    url(r'^shelf/unfavorite/(?P<location_id>\d+)/location$', views.unfavorite_location),
     url(r'^logout$', views.logout)
 ]
