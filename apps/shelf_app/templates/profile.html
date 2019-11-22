@@ -40,17 +40,16 @@
 </header>
 
 <body>
-    <!-- <p>Account Number: {{user.id}}</p> -->
     <div style="text-align: center;">
-        <h2 style='color:rgb(21, 25, 39)'>Favorite Places</h2>
-        <div style="height:200px; width: 40%; overflow: scroll; margin:20px;margin-left:30%; padding: 10px; border:3px rgb(21, 25, 39) solid; border-radius:7px;">
+        <h2 style='color:rgb(71, 67, 67)'>Favorite Places</h2>
+        <div style="box-shadow:  rgb(71, 67, 67) 5px 5px; height:200px; width: 40%; overflow: scroll; margin:20px;margin-left:30%; padding: 10px; border:3px rgb(194, 196, 206) solid; border-radius:7px;">
             {%for location in locations%}
                 <a style='font-size: 20px; ' href='/shelf/{{location.id}}/items'>{{location.store.name}} -- {{location.address}} -- {{location.city}} -- {{location.state}}</a>    <a style ='color:green'href='/shelf/unfavorite/{{location.id}}/location'>**UNFAVORITE**</a><br>
             {%endfor%}
         </div>
         <br>
-        <h2 style='color:rgb(21, 25, 39)'>Favorite Items</h2>
-        <div style="height:200px; width: 40%; overflow: scroll;margin:20px; margin-left:30%; padding: 10px;border:3px rgb(21, 25, 39) solid; border-radius:7px;">
+        <h2 style='color:rgb(71, 67, 67)'>Favorite Items</h2>
+        <div style=" box-shadow: rgb(71, 67, 67) 5px 5px; height:200px; width: 40%; overflow: scroll;margin:20px; margin-left:30%; padding: 10px;border:3px rgb(194, 196, 206) solid; border-radius:7px;">
             {%for item in items%}
             <a style='font-size: 20px;' href='/shelf/{{item.location.id}}/items'>{{item.name}} -- {{item.price}} -- {{item.aisle.description}}</a>     <a style ='color:green' href='/shelf/unfavorite/{{item.id}}/item'>**UNFAVORITE**</a><br>
             {%endfor%}
