@@ -44,7 +44,7 @@ class StoreManager(models.Manager):
     def basic_validator(self,data):
         errors={}
         if len(data['store_name'])<=0:
-            errors['name']='Input Store Name'
+            errors['store_name']='Input Store Name'
         return errors
 
 class Store(models.Model):
